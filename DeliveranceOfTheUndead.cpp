@@ -10,6 +10,7 @@ using namespace std;
 
 GameManager gameManager;
 Font font;
+Color BACKGROUND_COLOR = {16, 16, 16};
 
 void ChangeFullscreen(int screenWidth, int screenHeight)
 {
@@ -33,8 +34,8 @@ int main(void)
 {
     // Initialization
     //--------------------------------------------------------------------------------------
-    const int screenWidth = 320;
-    const int screenHeight = 180;
+    const int screenWidth = GAME_RESOLUTION_WIDTH;
+    const int screenHeight = GAME_RESOLUTION_HEIGHT;
     int i;
     SetConfigFlags(FLAG_VSYNC_HINT);
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
@@ -50,67 +51,12 @@ int main(void)
             ChangeFullscreen(screenWidth, screenHeight);
         }
 
-        // Update
-        //----------------------------------------------------------------------------------
-        // TODO: Update your variables here
-        //----------------------------------------------------------------------------------
-
-        // Draw
-        //----------------------------------------------------------------------------------
         BeginDrawing();
-        Color backgroundColor = { 16, 16, 16 };
-        ClearBackground(backgroundColor);
+        ClearBackground(BACKGROUND_COLOR);
         gameManager.Tick(GetFrameTime());
+        gameManager.Render();
 
-        /*
-        float playerSpeed = 40;
-        Vector2 playerVelocity = { 0, 0 };
-        if (IsKeyDown(KEY_LEFT))
-        {
-            playerVelocity.x = -playerSpeed;
-        }
-        else if (IsKeyDown(KEY_RIGHT))
-        {
-            playerVelocity.x = playerSpeed;
-        }
-
-        if (IsKeyDown(KEY_UP))
-        {
-            playerVelocity.y = -playerSpeed;
-        }
-        else if (IsKeyDown(KEY_DOWN))
-        {
-            playerVelocity.y = playerSpeed;
-        }
-
-        player.Translate(playerVelocity.x, playerVelocity.y);
-        
-        player.Render();
-        player.Tick(GetFrameTime());*/
-
-
-        /*
-        Vector2 position;
-        string title = "Deliverance of the Undead";
-        float fontSize = 20;
-
-        position.x = (screenWidth - (title.length() * fontSize) * 0.5) / 2;
-        position.y = screenHeight - 30;
-        DrawTextEx(font, title.c_str(), position, fontSize, 1, RED);
-
-        int textureIndex = frameCounter / 15;
-        textureIndex %= 3;
-        Texture texture = textures[textureIndex];
-
-        position.x = (screenWidth - textures[0].width) / 2;
-        position.y = (screenHeight - textures[0].height) / 2;
-        DrawTextureEx(texture, position, 0, 1.0, WHITE);
-
-        //DrawTexture(texture, screenWidth / 2 - texture.width / 2, screenHeight / 2 - texture.height / 2, WHITE);
-        //DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
-        */
         EndDrawing();
-        //----------------------------------------------------------------------------------
     }
 
     UnloadFont(font);

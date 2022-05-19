@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "GameManager.h"
 #include <iostream>
 
 using namespace std;
@@ -7,14 +8,17 @@ using namespace std;
 class Player : public GameObject
 {
 public:
+	float speed = 90;
+	bool isWalking = false;
+	bool isMovingLeft = false;
 
-	Texture2D runningSprites[3];
 	float animationCounter = 0;
 	int spriteIndex = 0;
+	Texture2D idleSpriteSheet;
+	Texture2D walkingSpriteSheet;
 
 	void Tick(float deltaTime)
 	{
-		//cout << deltaTime;
 		animationCounter += deltaTime;
 
 		if (animationCounter > 0.125)
@@ -22,21 +26,58 @@ public:
 			spriteIndex++;
 			spriteIndex %= 3;
 			animationCounter = 0;
-			texture = runningSprites[spriteIndex];
+			//texture = (isWalking) ? runningSpritesRight[spriteIndex] : idleSpritesRight[spriteIndex];
 		}
 	}
 
 	void LoadSprites()
 	{
+		idleSpriteSheet = LoadTexture("resources//AlterIdle.png");
+		walkingSpriteSheet = LoadTexture("resources//AlterWalking.png");
+	}
+
+	void Unload()
+	{
 		int i;
-		for (i = 0; i < 3; i++)
+		UnloadTexture(idleSpriteSheet);
+		UnloadTexture(walkingSpriteSheet);
+	}
+
+	void Translate(float speedX, float speedY)
+	{
+		GameObject::Translate(speedX, speedY);
+		isWalking = speedX != 0 || speedY != 0;
+
+		if (speedX < 0)
 		{
-			char fileName[2048];
-			std::snprintf(fileName, 2048, "resources/alas%d.png", (i + 1));
-			cout << fileName;
-			runningSprites[i] = LoadTexture(fileName);
+			isMovingLeft = true;
+		}
+		else if (speedX > 0)
+		{
+			isMovingLeft = false;
+		}
+	}
+
+	void Render()
+	{
+		float scale = GetRenderHeight() / 360;
+
+		Rectangle frameRec = { 0.0f, 0.0f, (float)idleSpriteSheet.width / 3.0, (float)idleSpriteSheet.height };
+		frameRec.x = (float)spriteIndex * ((float)idleSpriteSheet.width / 3.0);
+
+		Rectangle destRec = { x, y, texture.width / 3.0, texture.height };
+		destRec.x *= scale;
+		destRec.y *= scale;
+		destRec.width *= scale;
+		destRec.height *= scale;
+
+		if (isMovingLeft)
+		{
+			frameRec.width *= -1;
 		}
 
-		this->texture = runningSprites[0];
+		texture = (isWalking) ? walkingSpriteSheet : idleSpriteSheet;
+
+		DrawTexturePro(texture, frameRec, destRec, { 0, 0 }, 0, WHITE);
 	}
 };

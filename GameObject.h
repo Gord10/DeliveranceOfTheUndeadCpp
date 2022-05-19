@@ -10,9 +10,9 @@ protected:
 public: 
 
 	void LoadSprites();
-	void SetPosition(float x, float y);
+	virtual void SetPosition(float x, float y);
 	void Render();
-	void Translate(float speedX, float speedY);
+	virtual void Translate(float speedX, float speedY);
 	void Tick(float deltaTime);
 	virtual void Unload();
 };
