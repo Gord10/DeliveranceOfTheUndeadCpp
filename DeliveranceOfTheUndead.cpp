@@ -3,9 +3,27 @@
 #include <iostream>
 #include <string>
 #include <string_view>
-
+#include "Player.h"
 using namespace std;
 Font font;
+
+void ChangeFullscreen(int screenWidth, int screenHeight)
+{
+    // see what display we are on right now
+    int display = GetCurrentMonitor();
+    ToggleFullscreen();
+
+    if (!IsWindowFullscreen())
+    {
+        // if we are full screen, then go back to the windowed size
+        SetWindowSize(screenWidth, screenHeight);
+    }
+    else
+    {
+        // if we are not full screen, set the window size to match the monitor we are on
+        SetWindowSize(GetMonitorWidth(display), GetMonitorHeight(display));
+    }
+}
 
 int main(void)
 {
@@ -13,12 +31,14 @@ int main(void)
     //--------------------------------------------------------------------------------------
     const int screenWidth = 320;
     const int screenHeight = 180;
-
+    int i;
+    SetConfigFlags(FLAG_VSYNC_HINT);
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+    Player player(100, 100);
 
-    SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
-    //--------------------------------------------------------------------------------------
     font = LoadFont("resources/font/alagard.png");
+    
+    /*
     Texture2D textures[3];
 
     int i;
@@ -29,12 +49,17 @@ int main(void)
         cout << fileName;
         textures[i] = LoadTexture(fileName);
     }
-
+    */
     int frameCounter = 0;
-    //ToggleFullscreen();
+
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
+        if (IsKeyPressed(KEY_F1))
+        {
+            ChangeFullscreen(screenWidth, screenHeight);
+        }
+
         // Update
         //----------------------------------------------------------------------------------
         // TODO: Update your variables here
@@ -46,6 +71,33 @@ int main(void)
         Color backgroundColor = { 16, 16, 16 };
         ClearBackground(backgroundColor);
 
+        float playerSpeed = 40;
+        Vector2 playerVelocity = { 0, 0 };
+        if (IsKeyDown(KEY_LEFT))
+        {
+            playerVelocity.x = -playerSpeed;
+        }
+        else if (IsKeyDown(KEY_RIGHT))
+        {
+            playerVelocity.x = playerSpeed;
+        }
+
+        if (IsKeyDown(KEY_UP))
+        {
+            playerVelocity.y = -playerSpeed;
+        }
+        else if (IsKeyDown(KEY_DOWN))
+        {
+            playerVelocity.y = playerSpeed;
+        }
+
+        player.Translate(playerVelocity.x, playerVelocity.y);
+        
+        player.Render();
+        player.Tick(GetFrameTime());
+
+
+        /*
         Vector2 position;
         string title = "Deliverance of the Undead";
         float fontSize = 20;
@@ -64,17 +116,16 @@ int main(void)
 
         //DrawTexture(texture, screenWidth / 2 - texture.width / 2, screenHeight / 2 - texture.height / 2, WHITE);
         //DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
-
+        */
         EndDrawing();
         frameCounter++;
         //----------------------------------------------------------------------------------
     }
 
+    
     UnloadFont(font);
-    for (i = 0; i < 3; i++)
-    {
-        UnloadTexture(textures[i]);
-    }
+    player.Unload();
+
     // De-Initialization
     //--------------------------------------------------------------------------------------
     CloseWindow();        // Close window and OpenGL context
@@ -82,3 +133,4 @@ int main(void)
 
     return 0;
 }
+
