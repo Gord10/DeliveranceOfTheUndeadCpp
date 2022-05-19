@@ -4,19 +4,6 @@
 
 using namespace std;
 
-GameObject::GameObject(float x, float y)
-{
-	this->x = x;
-	this->y = y;
-	this->texture = LoadTexture("resources//Lion/lion_running1.png");
-}
-
-GameObject::GameObject()
-{
-	this->x = 0;
-	this->y = 0;
-}
-
 void GameObject::Render()
 {
 	float scale = GetRenderHeight() / 180;
@@ -38,4 +25,10 @@ void GameObject::Unload()
 void GameObject::Tick(float deltaTime)
 {
 
+}
+
+void GameObject::SetPosition(float x, float y)
+{
+	this->x = x;
+	this->y = y;
 }

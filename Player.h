@@ -26,27 +26,17 @@ public:
 		}
 	}
 
-	Player(float x, float y)
+	void LoadSprites()
 	{
-		this->x = x;
-		this->y = y;
-
 		int i;
 		for (i = 0; i < 3; i++)
 		{
 			char fileName[2048];
-			std::snprintf(fileName, 1024, "resources/alas%d.png", (i + 1));
+			std::snprintf(fileName, 2048, "resources/alas%d.png", (i + 1));
 			cout << fileName;
 			runningSprites[i] = LoadTexture(fileName);
 		}
 
-
 		this->texture = runningSprites[0];
-		
-	}
-
-	Player()
-	{
-		this->texture = LoadTexture("resources//Lion/lion_running1.png");
 	}
 };

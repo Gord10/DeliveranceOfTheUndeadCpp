@@ -8,8 +8,9 @@ protected:
 	Texture2D texture;
 	
 public: 
-	GameObject(float x, float y);
-	GameObject();
+
+	void LoadSprites();
+	void SetPosition(float x, float y);
 	void Render();
 	void Translate(float speedX, float speedY);
 	void Tick(float deltaTime);

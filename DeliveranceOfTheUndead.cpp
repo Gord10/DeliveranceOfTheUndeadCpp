@@ -3,8 +3,12 @@
 #include <iostream>
 #include <string>
 #include <string_view>
+#include "GameManager.h"
 #include "Player.h"
+
 using namespace std;
+
+GameManager gameManager;
 Font font;
 
 void ChangeFullscreen(int screenWidth, int screenHeight)
@@ -34,25 +38,11 @@ int main(void)
     int i;
     SetConfigFlags(FLAG_VSYNC_HINT);
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
-    Player player(100, 100);
+    //Player player(100, 100);
 
     font = LoadFont("resources/font/alagard.png");
-    
-    /*
-    Texture2D textures[3];
+    gameManager.Init();
 
-    int i;
-    for (i = 0; i < 3; i++)
-    {
-        char fileName[2048];
-        std::snprintf(fileName, 1024, "resources/alas%d.png", (i + 1));
-        cout << fileName;
-        textures[i] = LoadTexture(fileName);
-    }
-    */
-    int frameCounter = 0;
-
-    // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
         if (IsKeyPressed(KEY_F1))
@@ -70,7 +60,9 @@ int main(void)
         BeginDrawing();
         Color backgroundColor = { 16, 16, 16 };
         ClearBackground(backgroundColor);
+        gameManager.Tick(GetFrameTime());
 
+        /*
         float playerSpeed = 40;
         Vector2 playerVelocity = { 0, 0 };
         if (IsKeyDown(KEY_LEFT))
@@ -94,7 +86,7 @@ int main(void)
         player.Translate(playerVelocity.x, playerVelocity.y);
         
         player.Render();
-        player.Tick(GetFrameTime());
+        player.Tick(GetFrameTime());*/
 
 
         /*
@@ -118,13 +110,11 @@ int main(void)
         //DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
         */
         EndDrawing();
-        frameCounter++;
         //----------------------------------------------------------------------------------
     }
 
-    
     UnloadFont(font);
-    player.Unload();
+    gameManager.Unload();
 
     // De-Initialization
     //--------------------------------------------------------------------------------------
