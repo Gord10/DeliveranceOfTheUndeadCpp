@@ -1,6 +1,6 @@
 #pragma once
 #include "raylib.h"
-
+#include "GameManager.h"
 class GameObject
 {
 protected: 

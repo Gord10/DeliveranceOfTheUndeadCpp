@@ -5,6 +5,7 @@
 #include <string_view>
 #include "GameManager.h"
 #include "Player.h"
+#include "Definitions.h"
 
 using namespace std;
 
@@ -32,10 +33,12 @@ void ChangeFullscreen(int screenWidth, int screenHeight)
 
 int main(void)
 {
+    
     // Initialization
     //--------------------------------------------------------------------------------------
     const int screenWidth = GAME_RESOLUTION_WIDTH;
     const int screenHeight = GAME_RESOLUTION_HEIGHT;
+
     int i;
     SetConfigFlags(FLAG_VSYNC_HINT);
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");

@@ -1,0 +1,4 @@
+#pragma once
+
+#define GAME_RESOLUTION_WIDTH 640
+#define GAME_RESOLUTION_HEIGHT 360

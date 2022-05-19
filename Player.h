@@ -1,6 +1,7 @@
 #pragma once
-#include "GameObject.h"
-#include "GameManager.h"
+#include "Definitions.h"
+//#include "GameObject.h"
+//#include "GameManager.h"
 #include <iostream>
 
 using namespace std;
@@ -60,7 +61,7 @@ public:
 
 	void Render()
 	{
-		float scale = GetRenderHeight() / 360;
+		float scale = GetRenderHeight() / GAME_RESOLUTION_HEIGHT;
 
 		Rectangle frameRec = { 0.0f, 0.0f, (float)idleSpriteSheet.width / 3.0, (float)idleSpriteSheet.height };
 		frameRec.x = (float)spriteIndex * ((float)idleSpriteSheet.width / 3.0);
