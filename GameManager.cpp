@@ -3,6 +3,7 @@
 #include <string>
 
 Vector2 cameraPos;
+Texture groundTex;
 
 GameManager::GameManager()
 {
@@ -13,6 +14,7 @@ void GameManager::Init()
 {
 	player.LoadSprites();
 	player.SetPosition(GAME_RESOLUTION_WIDTH / 2, GAME_RESOLUTION_HEIGHT /2);
+    groundTex = LoadTexture("resources//Environment//ground.png");
 
     int i;
     for (i = 0; i < crossAmount; i++)
@@ -52,21 +54,36 @@ void GameManager::Tick(float deltaTime)
     player.Translate(playerVelocity.x, playerVelocity.y);
 
 	player.Tick(deltaTime);
+    float scale = GetRenderHeight() / GAME_RESOLUTION_HEIGHT;
     cameraPos = player.GetPosition();
+    cameraPos.x -= GAME_RESOLUTION_WIDTH / 2;
+    cameraPos.y -= GAME_RESOLUTION_HEIGHT / 2;
+    cameraPos.y -= 50;
 }
 
 void GameManager::Render()
 {
-    player.Render(cameraPos);
+    float scale = GetRenderHeight() / GAME_RESOLUTION_HEIGHT;
+    DrawTextureTiled(groundTex, {0, 0, (float) groundTex.width, (float) groundTex.height}, { (-2048 -cameraPos.x) * scale, (-2048 -cameraPos.y) * scale, 4096 * scale, 4096 * scale}, { 0, 0 }, 0, scale, WHITE);
 
     int i;
     for (i = 0; i < crossAmount; i++)
     {
         crosses[i].Render(cameraPos);
     }
+
+    player.Render(cameraPos);
 }
 
 void GameManager::Unload()
 {
 	player.Unload();
+
+    int i;
+    for (i = 0; i < crossAmount; i++)
+    {
+        crosses[i].Unload();
+    }
+
+    UnloadTexture(groundTex);
 }

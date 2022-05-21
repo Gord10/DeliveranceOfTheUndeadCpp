@@ -37,3 +37,11 @@ Vector2 GameObject::GetPosition()
 {
 	return { x, y };
 }
+
+Vector2 GameObject::GetCenterPosition(float scale)
+{
+	Vector2 pos = GetPosition();
+	pos.x += (texture.width) / 2;
+	pos.y += (texture.height) / 2;
+	return pos;
+}

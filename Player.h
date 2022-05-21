@@ -67,11 +67,20 @@ public:
 		Rectangle frameRec = { 0.0f, 0.0f, (float)idleSpriteSheet.width / 3.0, (float)idleSpriteSheet.height };
 		frameRec.x = (float)spriteIndex * ((float)idleSpriteSheet.width / 3.0);
 
-		Rectangle destRec = { 0, 0, texture.width / 3.0, texture.height };
-		destRec.x = (int) (GAME_RESOLUTION_WIDTH - texture.width) / 2;
-		destRec.y = (int) (GAME_RESOLUTION_HEIGHT - texture.height) / 2;
+		Rectangle destRec = { x - cameraPos.x, y - cameraPos.y, texture.width / 3.0, texture.height };
+
+
+		destRec.x -= frameRec.width / 2;
+		destRec.y -= texture.height;
+
+
 		destRec.x *= scale;
 		destRec.y *= scale;
+
+		/*destRec.x = (int)(GAME_RESOLUTION_WIDTH - texture.width) / 2;
+		destRec.y = (int) (GAME_RESOLUTION_HEIGHT - texture.height) / 2;*/
+		
+		
 		destRec.width *= scale;
 		destRec.height *= scale;
 				
@@ -83,5 +92,6 @@ public:
 		//texture = (isWalking) ? walkingSpriteSheet : idleSpriteSheet;
 
 		DrawTexturePro(texture, frameRec, destRec, { 0, 0 }, 0, WHITE);
+		DrawPixel(GetRenderWidth() / 2, GetRenderHeight() / 2, RED);
 	}
 };

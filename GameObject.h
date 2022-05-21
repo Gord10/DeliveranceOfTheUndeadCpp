@@ -21,4 +21,5 @@ public:
 	void Tick(float deltaTime);
 	virtual void Unload();
 	Vector2 GetPosition();
+	Vector2 GetCenterPosition(float scale);
 };
