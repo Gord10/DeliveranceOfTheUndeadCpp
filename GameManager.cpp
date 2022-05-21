@@ -18,10 +18,10 @@ void GameManager::Init()
 	player.SetPosition(GAME_RESOLUTION_WIDTH / 2, GAME_RESOLUTION_HEIGHT /2);
     groundTex = LoadTexture("resources//Environment//ground.png");
 
+    char fileName[256];
     int i;
     for (i = 0; i < crossAmount; i++)
     {
-        char fileName[256];
         snprintf(fileName, 256, "resources//Environment//Cross%d.png", ((i %3) + 1));
         //const char* fileName = "resources//Environment//Cross1.png";
         crosses[i].LoadSprite(fileName);
@@ -29,6 +29,15 @@ void GameManager::Init()
         float x = GetRandomValue(-70, 70) * 10;
         float y = GetRandomValue(-70, 70) * 10;
         crosses[i].SetPosition(x, y);
+    }
+
+    snprintf(fileName, 256, "resources//Goblet.png");
+    for (i = 0; i < gobletsAmount; i++)
+    {
+        goblets[i].LoadSprite(fileName);
+        float x = GetRandomValue(-50, 50) * 10;
+        float y = GetRandomValue(-50, 50) * 10;
+        goblets[i].SetPosition(x, y);
     }
 }
 
@@ -65,7 +74,30 @@ void GameManager::Tick(float deltaTime)
     cameraPos.y -= GAME_RESOLUTION_HEIGHT / 2;
     cameraPos.y -= 50;
 
-    health -= deltaTime * 0.01;
+    health -= deltaTime * healthDecreaseBySecond;
+
+    //Check if player is colliding a goblet
+    int i;
+    for (i = 0; i < gobletsAmount; i++)
+    {
+        if (!goblets[i].isActive)
+        {
+            continue;
+        }
+        Vector2 gobletPos = goblets[i].GetPosition();
+        float distanceFromPlayer = Vector2Distance(gobletPos, player.GetPosition());
+        float minDistanceToCollect = 20;
+        if (distanceFromPlayer <= minDistanceToCollect)
+        {
+            goblets[i].isActive = false;
+            humanity += humanityIncreasePerGoblet;
+
+            if (humanity >= 1)
+            {
+                humanity = 1;
+            }
+        }
+    }
 }
 
 void GameManager::Render()
@@ -77,6 +109,11 @@ void GameManager::Render()
     for (i = 0; i < crossAmount; i++)
     {
         crosses[i].Render(cameraPos);
+    }
+
+    for (i = 0; i < gobletsAmount; i++)
+    {
+        goblets[i].Render(cameraPos);
     }
 
     player.Render(cameraPos);
@@ -92,6 +129,11 @@ void GameManager::Unload()
     for (i = 0; i < crossAmount; i++)
     {
         crosses[i].Unload();
+    }
+
+    for (i = 0; i < gobletsAmount; i++)
+    {
+        goblets[i].Unload();
     }
 
     UnloadTexture(groundTex);
@@ -120,6 +162,6 @@ void GameManager::RenderUI(float scale)
 
     barY = 36;
     DrawRectangle(margin, barY * scale, barWidth, barHeight, BLACK);
-    DrawRectangle(margin, barY * scale, barWidth * 0.5, barHeight, DOTU_GREEN);
+    DrawRectangle(margin, barY * scale, barWidth * humanity, barHeight, DOTU_GREEN);
     DrawTextEx(font, "Humanity", { (float)textX, barY * scale }, fontSize * scale, 2, WHITE);
 }

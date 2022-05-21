@@ -7,8 +7,13 @@ using namespace std;
 
 void GameObject::Render(Vector2 cameraPos)
 {
+	if (!isActive)
+	{
+		return;
+	}
+
 	float scale = GetRenderHeight() / GAME_RESOLUTION_HEIGHT;
-	DrawTextureEx(texture, { (x - cameraPos.x) * scale, (y - cameraPos.y) * scale}, 0, scale, WHITE);
+	DrawTextureEx(texture, { (x - cameraPos.x - (texture.width / 2)) * scale, (y - cameraPos.y - texture.height) * scale}, 0, scale, WHITE);
 }
 
 void GameObject::Translate(float xSpeed, float ySpeed)

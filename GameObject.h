@@ -12,6 +12,7 @@ protected:
 	Texture2D texture;
 	
 public: 
+	bool isActive = true;
 
 	void LoadSprites();
 	void LoadSprite(const char * fileName);
