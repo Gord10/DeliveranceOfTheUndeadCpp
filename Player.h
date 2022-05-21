@@ -29,6 +29,8 @@ public:
 			animationCounter = 0;
 			//texture = (isWalking) ? runningSpritesRight[spriteIndex] : idleSpritesRight[spriteIndex];
 		}
+
+		//cout << y << endl;
 	}
 
 	void LoadSprites()

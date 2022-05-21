@@ -43,6 +43,17 @@ void GameManager::Init()
         goblets[i].SetPosition(x, y);
         gameObjects.push_back(&goblets[i]);
     }
+
+    for (i = 0; i < villagersAmount; i++)
+    {
+        snprintf(fileName, 256, "resources//Villager%d.png", ((i % 3) + 1));
+        villagers[i].LoadSprite(fileName);
+        float x = GetRandomValue(-20, 20) * 10;
+        float y = GetRandomValue(-20, 20) * 10;
+        villagers[i].SetPosition(x, y);
+        villagers[i].AssignPlayer(&player);
+        gameObjects.push_back(&villagers[i]);
+    }
 }
 
 void GameManager::Tick(float deltaTime)
@@ -71,7 +82,7 @@ void GameManager::Tick(float deltaTime)
 
     player.Translate(playerVelocity.x, playerVelocity.y);
 
-	player.Tick(deltaTime);
+	//player.Tick(deltaTime);
     float scale = GetRenderHeight() / GAME_RESOLUTION_HEIGHT;
     cameraPos = player.GetPosition();
     cameraPos.x -= GAME_RESOLUTION_WIDTH / 2;
@@ -101,6 +112,29 @@ void GameManager::Tick(float deltaTime)
                 humanity = 1;
             }
         }
+    }
+
+    for (i = 0; i < villagersAmount; i++)
+    {
+        Vector2 villagerPos = villagers[i].GetPosition();
+        float distanceFromPlayer = Vector2Distance(villagerPos, player.GetPosition());
+        float minDistanceToCollect = 20;
+
+        if (distanceFromPlayer <= minDistanceToCollect)
+        {
+            health += 0.1;
+            humanity -= 0.1;
+
+            float x = GetRandomValue(-20, 20) * 10;
+            float y = GetRandomValue(-20, 20) * 10;
+            villagers[i].SetPosition(x, y);
+        }
+    }
+
+    list<GameObject*>::iterator it;
+    for (it = gameObjects.begin(); it != gameObjects.end(); it++)
+    {
+        (*it)->Tick(deltaTime);
     }
 }
 

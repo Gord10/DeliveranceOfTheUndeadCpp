@@ -1,6 +1,7 @@
 #include "raylib.h"
 #include "GameManager.h"
 #include "GameObject.h"
+#include "Villager.h"
 #include <iostream>
 
 using namespace std;
@@ -49,4 +50,9 @@ Vector2 GameObject::GetCenterPosition(float scale)
 	pos.x += (texture.width) / 2;
 	pos.y += (texture.height) / 2;
 	return pos;
+}
+
+void GameObject::Tick(float deltaTime)
+{
+
 }
