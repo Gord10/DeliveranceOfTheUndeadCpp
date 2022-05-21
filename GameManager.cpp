@@ -15,7 +15,6 @@ void GameManager::Init()
     font = LoadFont("resources//Font//alagard.png");
 
 	player.LoadSprites();
-	
     gameObjects.push_back(&player);
 
     groundTex = LoadTexture("resources//Environment//ground.png");
@@ -48,6 +47,7 @@ void GameManager::Init()
         gameObjects.push_back(&villagers[i]);
     }
 
+    audioManager.Init();
     ResetGame();
 }
 
@@ -84,7 +84,7 @@ void GameManager::Tick(float deltaTime)
         {
             goblets[i].SpawnAtRandomPosition(false, player.GetPosition());
             humanity += humanityIncreasePerGoblet;
-
+            audioManager.PlayHumanity();
             if (humanity >= 1)
             {
                 humanity = 1;
@@ -112,6 +112,11 @@ void GameManager::Tick(float deltaTime)
                 ResetGame();
                 return;
             }
+            else
+            {
+                audioManager.PlayFeedSound();
+            }
+
             villagers[i].SpawnAtRandomPosition(false, player.GetPosition());
         }
 

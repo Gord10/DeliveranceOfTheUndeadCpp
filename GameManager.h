@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Player.h"
 #include "Villager.h"
+#include "AudioManager.h"
 #include <list>
 using namespace std;
 //#define GAME_RESOLUTION_WIDTH 640
@@ -29,6 +30,7 @@ public:
 	GameObject crosses[crossAmount];
 	GameObject goblets[gobletsAmount];
 	Villager villagers[villagersAmount];
+	AudioManager audioManager;
 
 	Vector2 cameraPos;
 

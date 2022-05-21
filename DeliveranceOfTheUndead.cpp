@@ -38,14 +38,8 @@ int main(void)
     const int screenWidth = GAME_RESOLUTION_WIDTH;
     const int screenHeight = GAME_RESOLUTION_HEIGHT;
 
-    int i;
     SetConfigFlags(FLAG_VSYNC_HINT);
-    //SetTargetFPS(60);
-
     InitWindow(screenWidth, screenHeight, "Deliverance of the Undead");
-    //Player player(100, 100);
-
-    //font = LoadFont("resources/font/alagard.png");
     gameManager.Init();
 
     bool willQuit = false;

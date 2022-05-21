@@ -148,6 +148,7 @@
     <ClCompile Include="GameObject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AudioManager.h" />
     <ClInclude Include="Definitions.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameObject.h" />
