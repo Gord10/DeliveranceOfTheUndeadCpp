@@ -1,7 +1,7 @@
 #include "GameManager.h"
 #include <iostream>
 #include <string>
-
+#include "raymath.h"
 Vector2 cameraPos;
 Texture groundTex;
 
@@ -37,21 +37,24 @@ void GameManager::Tick(float deltaTime)
     Vector2 playerVelocity = { 0, 0 };
     if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
     {
-        playerVelocity.x = -player.speed;
+        playerVelocity.x = -1;
     }
     else if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
     {
-        playerVelocity.x = player.speed;
+        playerVelocity.x = 1;
     }
 
     if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
     {
-        playerVelocity.y = -player.speed;
+        playerVelocity.y = -1;
     }
     else if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S))
     {
-        playerVelocity.y = player.speed;
+        playerVelocity.y = 1;
     }
+
+    playerVelocity = Vector2Normalize(playerVelocity);
+    playerVelocity = Vector2Scale(playerVelocity, player.speed);
 
     player.Translate(playerVelocity.x, playerVelocity.y);
 
@@ -101,9 +104,9 @@ void GameManager::RenderUI(float scale)
     barWidth *= scale;
     float margin = GetRenderWidth() - barWidth;
     margin /= 2;
-    float fontSize = 10;
-    float barY = 10;
-    float barHeight = 12 * scale;
+    float fontSize = 16;
+    float barY = 12;
+    float barHeight = 16 * scale;
  
     DrawRectangle(margin, barY *scale, barWidth, barHeight, BLACK);
     DrawRectangle(margin, barY * scale, barWidth * health, barHeight, DOTU_RED);
@@ -115,7 +118,7 @@ void GameManager::RenderUI(float scale)
     textWidth = MeasureText("Humanity", 10);
     textX = (GetRenderWidth() - textWidth * scale) / 2;
 
-    barY = 30;
+    barY = 36;
     DrawRectangle(margin, barY * scale, barWidth, barHeight, BLACK);
     DrawRectangle(margin, barY * scale, barWidth * 0.5, barHeight, DOTU_GREEN);
     DrawTextEx(font, "Humanity", { (float)textX, barY * scale }, fontSize * scale, 2, WHITE);
