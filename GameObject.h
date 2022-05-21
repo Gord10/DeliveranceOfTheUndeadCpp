@@ -17,7 +17,7 @@ public:
 	void LoadSprites();
 	void LoadSprite(const char * fileName);
 	virtual void SetPosition(float x, float y);
-	void Render(Vector2 cameraPos);
+	virtual void Render(Vector2 cameraPos);
 	virtual void Translate(float speedX, float speedY);
 	void Tick(float deltaTime);
 	virtual void Unload();

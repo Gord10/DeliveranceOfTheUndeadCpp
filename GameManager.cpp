@@ -16,6 +16,8 @@ void GameManager::Init()
 
 	player.LoadSprites();
 	player.SetPosition(GAME_RESOLUTION_WIDTH / 2, GAME_RESOLUTION_HEIGHT /2);
+    gameObjects.push_back(&player);
+
     groundTex = LoadTexture("resources//Environment//ground.png");
 
     char fileName[256];
@@ -29,6 +31,7 @@ void GameManager::Init()
         float x = GetRandomValue(-70, 70) * 10;
         float y = GetRandomValue(-70, 70) * 10;
         crosses[i].SetPosition(x, y);
+        gameObjects.push_back(&crosses[i]);
     }
 
     snprintf(fileName, 256, "resources//Goblet.png");
@@ -38,6 +41,7 @@ void GameManager::Init()
         float x = GetRandomValue(-50, 50) * 10;
         float y = GetRandomValue(-50, 50) * 10;
         goblets[i].SetPosition(x, y);
+        gameObjects.push_back(&goblets[i]);
     }
 }
 
@@ -105,35 +109,21 @@ void GameManager::Render()
     float scale = GetRenderHeight() / GAME_RESOLUTION_HEIGHT;
     DrawTextureTiled(groundTex, {0, 0, (float) groundTex.width, (float) groundTex.height}, { (-2048 -cameraPos.x) * scale, (-2048 -cameraPos.y) * scale, 4096 * scale, 4096 * scale}, { 0, 0 }, 0, scale, WHITE);
 
-    int i;
-    for (i = 0; i < crossAmount; i++)
+    std::list<GameObject*>::iterator it;
+    for (it = gameObjects.begin(); it != gameObjects.end(); it++)
     {
-        crosses[i].Render(cameraPos);
+       (*it)->Render(cameraPos);
     }
-
-    for (i = 0; i < gobletsAmount; i++)
-    {
-        goblets[i].Render(cameraPos);
-    }
-
-    player.Render(cameraPos);
 
     RenderUI(scale);
 }
 
 void GameManager::Unload()
 {
-	player.Unload();
-
-    int i;
-    for (i = 0; i < crossAmount; i++)
+    std::list<GameObject*>::iterator it;
+    for (it = gameObjects.begin(); it != gameObjects.end(); it++)
     {
-        crosses[i].Unload();
-    }
-
-    for (i = 0; i < gobletsAmount; i++)
-    {
-        goblets[i].Unload();
+        (*it)->Unload();
     }
 
     UnloadTexture(groundTex);

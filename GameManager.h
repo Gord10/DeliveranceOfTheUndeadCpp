@@ -1,7 +1,8 @@
 #pragma once
 #include "GameObject.h"
 #include "Player.h"
-
+#include <list>
+using namespace std;
 //#define GAME_RESOLUTION_WIDTH 640
 //#define GAME_RESOLUTION_HEIGHT 360
 
@@ -31,6 +32,9 @@ public:
 	void Render();
 
 	void RenderUI(float scale);
+private:
+	list<GameObject*> gameObjects;
+
 };
 
 
