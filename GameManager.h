@@ -8,12 +8,11 @@
 class GameManager
 {
 public:
-	//static const int resolutionWidth = 640;
-	//static const int resolutionHeight = 360;
-	
+	const static int crossAmount = 50;
 	Player player;
-	
+	GameObject crosses[crossAmount];
 	GameManager();
+	Vector2 cameraPos;
 
 	void Init();
 	void Tick(float deltaTime);

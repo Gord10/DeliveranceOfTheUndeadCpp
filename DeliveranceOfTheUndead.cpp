@@ -41,6 +41,8 @@ int main(void)
 
     int i;
     SetConfigFlags(FLAG_VSYNC_HINT);
+    //SetTargetFPS(60);
+
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
     //Player player(100, 100);
 

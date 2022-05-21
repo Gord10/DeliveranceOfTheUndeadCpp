@@ -5,16 +5,16 @@
 
 using namespace std;
 
-void GameObject::Render()
+void GameObject::Render(Vector2 cameraPos)
 {
 	float scale = GetRenderHeight() / GAME_RESOLUTION_HEIGHT;
-	//DrawTextureEx(texture, { x, y }, 0, scale, WHITE);
+	DrawTextureEx(texture, { (x - cameraPos.x) * scale, (y - cameraPos.y) * scale}, 0, scale, WHITE);
 }
 
 void GameObject::Translate(float xSpeed, float ySpeed)
 {
-	this->x += xSpeed * GetFrameTime();
-	this->y += ySpeed * GetFrameTime();
+	this->x += xSpeed *GetFrameTime();
+	this->y += ySpeed *GetFrameTime();
 }
 
 void GameObject::Unload()
@@ -26,4 +26,14 @@ void GameObject::SetPosition(float x, float y)
 {
 	this->x = x;
 	this->y = y;
+}
+
+void GameObject::LoadSprite(const char* fileName)
+{
+	texture = LoadTexture(fileName);
+}
+
+Vector2 GameObject::GetPosition()
+{
+	return { x, y };
 }

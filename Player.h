@@ -59,25 +59,28 @@ public:
 		}
 	}
 
-	void Render()
+	void Render(Vector2 cameraPos)
 	{
 		float scale = GetRenderHeight() / GAME_RESOLUTION_HEIGHT;
+		texture = (isWalking) ? walkingSpriteSheet : idleSpriteSheet;
 
 		Rectangle frameRec = { 0.0f, 0.0f, (float)idleSpriteSheet.width / 3.0, (float)idleSpriteSheet.height };
 		frameRec.x = (float)spriteIndex * ((float)idleSpriteSheet.width / 3.0);
 
-		Rectangle destRec = { x, y, texture.width / 3.0, texture.height };
+		Rectangle destRec = { 0, 0, texture.width / 3.0, texture.height };
+		destRec.x = (int) (GAME_RESOLUTION_WIDTH - texture.width) / 2;
+		destRec.y = (int) (GAME_RESOLUTION_HEIGHT - texture.height) / 2;
 		destRec.x *= scale;
 		destRec.y *= scale;
 		destRec.width *= scale;
 		destRec.height *= scale;
-
+				
 		if (isMovingLeft)
 		{
 			frameRec.width *= -1;
 		}
 
-		texture = (isWalking) ? walkingSpriteSheet : idleSpriteSheet;
+		//texture = (isWalking) ? walkingSpriteSheet : idleSpriteSheet;
 
 		DrawTexturePro(texture, frameRec, destRec, { 0, 0 }, 0, WHITE);
 	}
