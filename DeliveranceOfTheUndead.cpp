@@ -10,7 +10,6 @@
 using namespace std;
 
 GameManager gameManager;
-Font font;
 Color BACKGROUND_COLOR = {16, 16, 16};
 
 void ChangeFullscreen(int screenWidth, int screenHeight)
@@ -43,10 +42,10 @@ int main(void)
     SetConfigFlags(FLAG_VSYNC_HINT);
     //SetTargetFPS(60);
 
-    InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+    InitWindow(screenWidth, screenHeight, "Deliverance of the Undead");
     //Player player(100, 100);
 
-    font = LoadFont("resources/font/alagard.png");
+    //font = LoadFont("resources/font/alagard.png");
     gameManager.Init();
 
     bool willQuit = false;
@@ -69,8 +68,7 @@ int main(void)
 
         EndDrawing();
     }
-
-    UnloadFont(font);
+    
     gameManager.Unload();
 
     // De-Initialization
