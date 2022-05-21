@@ -2,6 +2,7 @@
 #include "GameManager.h"
 #include "GameObject.h"
 #include "Villager.h"
+#include "Definitions.h"
 #include <iostream>
 
 using namespace std;
@@ -55,4 +56,11 @@ Vector2 GameObject::GetCenterPosition(float scale)
 void GameObject::Tick(float deltaTime)
 {
 
+}
+
+void GameObject::SpawnAtRandomPosition()
+{
+	float x = GetRandomValue(-GAME_MAX_X / 10, GAME_MAX_X / 10) * 10;
+	float y = GetRandomValue(-GAME_MAX_Y / 10, GAME_MAX_Y / 10) * 10;
+	SetPosition(x, y);
 }

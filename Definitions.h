@@ -2,8 +2,8 @@
 
 #define GAME_RESOLUTION_WIDTH 640
 #define GAME_RESOLUTION_HEIGHT 360
-#define GAME_MAX_X 1024
-#define GAME_MAX_Y 1024
+#define GAME_MAX_X 640
+#define GAME_MAX_Y 640
 
 #define DOTU_RED {172, 50 , 50, 255}
 #define DOTU_GREEN {75, 105, 47, 255}

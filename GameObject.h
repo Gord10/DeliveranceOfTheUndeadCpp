@@ -22,6 +22,7 @@ public:
 	virtual void Translate(float speedX, float speedY);
 	virtual void Tick(float deltaTime);
 	virtual void Unload();
+	void SpawnAtRandomPosition();
 
 	Vector2 GetPosition();
 	Vector2 GetCenterPosition(float scale);

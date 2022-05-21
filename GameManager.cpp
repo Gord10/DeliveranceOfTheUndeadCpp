@@ -27,10 +27,7 @@ void GameManager::Init()
         snprintf(fileName, 256, "resources//Environment//Cross%d.png", ((i %3) + 1));
         //const char* fileName = "resources//Environment//Cross1.png";
         crosses[i].LoadSprite(fileName);
-
-        float x = GetRandomValue(-70, 70) * 10;
-        float y = GetRandomValue(-70, 70) * 10;
-        crosses[i].SetPosition(x, y);
+        crosses[i].SpawnAtRandomPosition();
         gameObjects.push_back(&crosses[i]);
     }
 
@@ -38,9 +35,7 @@ void GameManager::Init()
     for (i = 0; i < gobletsAmount; i++)
     {
         goblets[i].LoadSprite(fileName);
-        float x = GetRandomValue(-50, 50) * 10;
-        float y = GetRandomValue(-50, 50) * 10;
-        goblets[i].SetPosition(x, y);
+        goblets[i].SpawnAtRandomPosition();
         gameObjects.push_back(&goblets[i]);
     }
 
@@ -48,9 +43,7 @@ void GameManager::Init()
     {
         snprintf(fileName, 256, "resources//Villager%d.png", ((i % 3) + 1));
         villagers[i].LoadSprite(fileName);
-        float x = GetRandomValue(-20, 20) * 10;
-        float y = GetRandomValue(-20, 20) * 10;
-        villagers[i].SetPosition(x, y);
+        villagers[i].SpawnAtRandomPosition();
         villagers[i].AssignPlayer(&player);
         gameObjects.push_back(&villagers[i]);
     }
@@ -118,16 +111,13 @@ void GameManager::Tick(float deltaTime)
     {
         Vector2 villagerPos = villagers[i].GetPosition();
         float distanceFromPlayer = Vector2Distance(villagerPos, player.GetPosition());
-        float minDistanceToCollect = 20;
+        float minDistanceToCollect = 40;
 
         if (distanceFromPlayer <= minDistanceToCollect)
         {
             health += 0.1;
             humanity -= 0.1;
-
-            float x = GetRandomValue(-20, 20) * 10;
-            float y = GetRandomValue(-20, 20) * 10;
-            villagers[i].SetPosition(x, y);
+            villagers[i].SpawnAtRandomPosition();
         }
     }
 
@@ -143,6 +133,13 @@ void GameManager::Render()
     float scale = GetRenderHeight() / GAME_RESOLUTION_HEIGHT;
     DrawTextureTiled(groundTex, {0, 0, (float) groundTex.width, (float) groundTex.height}, { (-2048 -cameraPos.x) * scale, (-2048 -cameraPos.y) * scale, 4096 * scale, 4096 * scale}, { 0, 0 }, 0, scale, WHITE);
 
+    DrawLine((-GAME_MAX_X - cameraPos.x) * scale, (GAME_MAX_Y - cameraPos.y) * scale, (GAME_MAX_X - cameraPos.x) * scale, (GAME_MAX_Y - cameraPos.y) * scale, DOTU_RED);
+    DrawLine((-GAME_MAX_X - cameraPos.x) * scale, (-GAME_MAX_Y - cameraPos.y) * scale, (GAME_MAX_X - cameraPos.x) * scale, (-GAME_MAX_Y - cameraPos.y) * scale, DOTU_RED);
+
+    DrawLine((-GAME_MAX_X - cameraPos.x) * scale, (-GAME_MAX_Y - cameraPos.y) * scale, (-GAME_MAX_X - cameraPos.x) * scale, (GAME_MAX_Y - cameraPos.y) * scale, DOTU_RED);
+    DrawLine((GAME_MAX_X - cameraPos.x) * scale, (-GAME_MAX_Y - cameraPos.y) * scale, (GAME_MAX_X - cameraPos.x) * scale, (GAME_MAX_Y - cameraPos.y) * scale, DOTU_RED);
+
+
     gameObjects.sort([](const GameObject* A, const GameObject* B) {return A->y < B->y; });
 
     list<GameObject*>::iterator it;
@@ -150,6 +147,7 @@ void GameManager::Render()
     {
        (*it)->Render(cameraPos);
     }
+
 
     RenderUI(scale);
 }

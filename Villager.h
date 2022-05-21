@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "raymath.h"
 #include "GameManager.h"
+#include "Definitions.h"
 
 class Villager : public GameObject
 {
@@ -41,6 +42,11 @@ public:
 		}
 
 		RunFromPlayer(player->GetPosition());
+
+		if (x < -GAME_MAX_X || x > GAME_MAX_X || y < -GAME_MAX_Y || y > GAME_MAX_Y)
+		{
+			SpawnAtRandomPosition();
+		}
 	}
 	
 	void LoadSprite(char *fileName)
