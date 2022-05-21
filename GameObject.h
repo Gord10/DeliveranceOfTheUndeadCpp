@@ -8,11 +8,12 @@ extern Vector2 cameraPos;
 class GameObject
 {
 protected: 
-	float x = 0, y = 0;
+	
 	Texture2D texture;
 	
 public: 
 	bool isActive = true;
+	float x = 0, y = 0;
 
 	void LoadSprites();
 	void LoadSprite(const char * fileName);

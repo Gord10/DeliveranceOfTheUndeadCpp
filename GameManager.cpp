@@ -109,7 +109,9 @@ void GameManager::Render()
     float scale = GetRenderHeight() / GAME_RESOLUTION_HEIGHT;
     DrawTextureTiled(groundTex, {0, 0, (float) groundTex.width, (float) groundTex.height}, { (-2048 -cameraPos.x) * scale, (-2048 -cameraPos.y) * scale, 4096 * scale, 4096 * scale}, { 0, 0 }, 0, scale, WHITE);
 
-    std::list<GameObject*>::iterator it;
+    gameObjects.sort([](const GameObject* A, const GameObject* B) {return A->y < B->y; });
+
+    list<GameObject*>::iterator it;
     for (it = gameObjects.begin(); it != gameObjects.end(); it++)
     {
        (*it)->Render(cameraPos);
