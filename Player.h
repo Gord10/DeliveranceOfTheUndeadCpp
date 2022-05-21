@@ -92,6 +92,6 @@ public:
 		//texture = (isWalking) ? walkingSpriteSheet : idleSpriteSheet;
 
 		DrawTexturePro(texture, frameRec, destRec, { 0, 0 }, 0, WHITE);
-		DrawPixel(GetRenderWidth() / 2, GetRenderHeight() / 2, RED);
+		//DrawPixel(GetRenderWidth() / 2, GetRenderHeight() / 2, RED);
 	}
 };

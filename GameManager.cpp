@@ -12,6 +12,8 @@ GameManager::GameManager()
 
 void GameManager::Init()
 {
+    font = LoadFont("resources//Font//alagard.png");
+
 	player.LoadSprites();
 	player.SetPosition(GAME_RESOLUTION_WIDTH / 2, GAME_RESOLUTION_HEIGHT /2);
     groundTex = LoadTexture("resources//Environment//ground.png");
@@ -24,8 +26,8 @@ void GameManager::Init()
         //const char* fileName = "resources//Environment//Cross1.png";
         crosses[i].LoadSprite(fileName);
 
-        float x = GetRandomValue(-50, 50) * 10;
-        float y = GetRandomValue(-50, 50) * 10;
+        float x = GetRandomValue(-70, 70) * 10;
+        float y = GetRandomValue(-70, 70) * 10;
         crosses[i].SetPosition(x, y);
     }
 }
@@ -59,6 +61,8 @@ void GameManager::Tick(float deltaTime)
     cameraPos.x -= GAME_RESOLUTION_WIDTH / 2;
     cameraPos.y -= GAME_RESOLUTION_HEIGHT / 2;
     cameraPos.y -= 50;
+
+    health -= deltaTime * 0.01;
 }
 
 void GameManager::Render()
@@ -73,6 +77,8 @@ void GameManager::Render()
     }
 
     player.Render(cameraPos);
+
+    RenderUI(scale);
 }
 
 void GameManager::Unload()
@@ -86,4 +92,31 @@ void GameManager::Unload()
     }
 
     UnloadTexture(groundTex);
+    UnloadFont(font);
+}
+
+void GameManager::RenderUI(float scale)
+{
+    float barWidth = 160;
+    barWidth *= scale;
+    float margin = GetRenderWidth() - barWidth;
+    margin /= 2;
+    float fontSize = 10;
+    float barY = 10;
+    float barHeight = 12 * scale;
+ 
+    DrawRectangle(margin, barY *scale, barWidth, barHeight, BLACK);
+    DrawRectangle(margin, barY * scale, barWidth * health, barHeight, DOTU_RED);
+
+    int textWidth = MeasureText("Blood", 10);
+    int textX = (GetRenderWidth() - textWidth * scale) / 2;
+    DrawTextEx(font, "Blood", {(float) textX, barY * scale}, fontSize * scale, 2, WHITE);
+
+    textWidth = MeasureText("Humanity", 10);
+    textX = (GetRenderWidth() - textWidth * scale) / 2;
+
+    barY = 30;
+    DrawRectangle(margin, barY * scale, barWidth, barHeight, BLACK);
+    DrawRectangle(margin, barY * scale, barWidth * 0.5, barHeight, DOTU_GREEN);
+    DrawTextEx(font, "Humanity", { (float)textX, barY * scale }, fontSize * scale, 2, WHITE);
 }

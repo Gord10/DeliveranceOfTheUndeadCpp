@@ -8,16 +8,22 @@
 class GameManager
 {
 public:
+	GameManager();
+
+	float health = 1;
+	Font font;
 	const static int crossAmount = 50;
 	Player player;
 	GameObject crosses[crossAmount];
-	GameManager();
+	
 	Vector2 cameraPos;
 
 	void Init();
 	void Tick(float deltaTime);
 	void Unload();
 	void Render();
+
+	void RenderUI(float scale);
 };
 
 
