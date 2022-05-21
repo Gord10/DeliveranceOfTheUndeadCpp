@@ -54,10 +54,7 @@ void GameManager::Init()
 void GameManager::Tick(float deltaTime)
 {
     timePassed += deltaTime;
-
-
-
-	//player.Tick(deltaTime);
+    
     float scale = GetRenderHeight() / GAME_RESOLUTION_HEIGHT;
     cameraPos = player.GetPosition();
     cameraPos.x -= GAME_RESOLUTION_WIDTH / 2;
@@ -117,6 +114,17 @@ void GameManager::Tick(float deltaTime)
             }
             villagers[i].SpawnAtRandomPosition(false, player.GetPosition());
         }
+
+        if (player.x < -GAME_MAX_X || player.x > GAME_MAX_X || player.y < -GAME_MAX_Y || player.y > GAME_MAX_Y)
+        {
+            health -= 0.1 * deltaTime;
+            player.SetHarmed(true);
+        }
+        else
+        {
+            player.SetHarmed(false);
+        }
+
     }
 
     list<GameObject*>::iterator it;
@@ -131,12 +139,10 @@ void GameManager::Render()
     float scale = GetRenderHeight() / GAME_RESOLUTION_HEIGHT;
     DrawTextureTiled(groundTex, {0, 0, (float) groundTex.width, (float) groundTex.height}, { (-2048 -cameraPos.x) * scale, (-2048 -cameraPos.y) * scale, 4096 * scale, 4096 * scale}, { 0, 0 }, 0, scale, WHITE);
 
-    DrawLine((-GAME_MAX_X - cameraPos.x) * scale, (GAME_MAX_Y - cameraPos.y) * scale, (GAME_MAX_X - cameraPos.x) * scale, (GAME_MAX_Y - cameraPos.y) * scale, DOTU_RED);
-    DrawLine((-GAME_MAX_X - cameraPos.x) * scale, (-GAME_MAX_Y - cameraPos.y) * scale, (GAME_MAX_X - cameraPos.x) * scale, (-GAME_MAX_Y - cameraPos.y) * scale, DOTU_RED);
-
-    DrawLine((-GAME_MAX_X - cameraPos.x) * scale, (-GAME_MAX_Y - cameraPos.y) * scale, (-GAME_MAX_X - cameraPos.x) * scale, (GAME_MAX_Y - cameraPos.y) * scale, DOTU_RED);
-    DrawLine((GAME_MAX_X - cameraPos.x) * scale, (-GAME_MAX_Y - cameraPos.y) * scale, (GAME_MAX_X - cameraPos.x) * scale, (GAME_MAX_Y - cameraPos.y) * scale, DOTU_RED);
-
+    DrawLineEx({ (-GAME_MAX_X - cameraPos.x) * scale, (-GAME_MAX_Y - cameraPos.y) * scale}, { (GAME_MAX_X - cameraPos.x) * scale, (-GAME_MAX_Y -cameraPos.y) * scale}, scale, DOTU_RED);
+    DrawLineEx({ (-GAME_MAX_X - cameraPos.x) * scale, (GAME_MAX_Y - cameraPos.y) * scale }, { (GAME_MAX_X - cameraPos.x) * scale, (GAME_MAX_Y - cameraPos.y) * scale }, scale, DOTU_RED);
+    DrawLineEx({ (-GAME_MAX_X - cameraPos.x) * scale, (-GAME_MAX_Y - cameraPos.y) * scale }, { (-GAME_MAX_X - cameraPos.x) * scale, (GAME_MAX_Y - cameraPos.y) * scale }, scale, DOTU_RED);
+    DrawLineEx({ (GAME_MAX_X - cameraPos.x) * scale, (-GAME_MAX_Y - cameraPos.y) * scale }, { (GAME_MAX_X - cameraPos.x) * scale, (GAME_MAX_Y - cameraPos.y) * scale }, scale, DOTU_RED);
 
     gameObjects.sort([](const GameObject* A, const GameObject* B) {return A->y < B->y; });
 
@@ -145,7 +151,6 @@ void GameManager::Render()
     {
        (*it)->Render(cameraPos);
     }
-
 
     RenderUI(scale);
 }

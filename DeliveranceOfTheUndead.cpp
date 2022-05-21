@@ -50,7 +50,7 @@ int main(void)
     gameManager.Init();
 
     bool willQuit = false;
-    while (!willQuit)    // Detect window close button or ESC key
+    while (!WindowShouldClose() && !willQuit)    // Detect window close button or ESC key
     {
         if (IsKeyPressed(KEY_F1))
         {
