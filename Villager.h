@@ -8,7 +8,7 @@ class Villager : public GameObject
 {
 	Player* player;
 	//GameManager* gameManager;
-	float speed = 100;
+	float speed = 70;
 	bool isWalking = false;
 	bool isMovingLeft = false;
 
@@ -34,7 +34,7 @@ public:
 	{
 		animationCounter += deltaTime;
 
-		if (animationCounter > 0.100)
+		if (animationCounter > 0.075)
 		{
 			spriteIndex++;
 			spriteIndex %= 4;
@@ -45,7 +45,7 @@ public:
 
 		if (x < -GAME_MAX_X || x > GAME_MAX_X || y < -GAME_MAX_Y || y > GAME_MAX_Y)
 		{
-			SpawnAtRandomPosition();
+			SpawnAtRandomPosition(false, player->GetPosition());
 		}
 	}
 	

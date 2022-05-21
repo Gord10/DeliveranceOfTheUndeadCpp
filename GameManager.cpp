@@ -15,7 +15,7 @@ void GameManager::Init()
     font = LoadFont("resources//Font//alagard.png");
 
 	player.LoadSprites();
-	player.SetPosition(GAME_RESOLUTION_WIDTH / 2, GAME_RESOLUTION_HEIGHT /2);
+	
     gameObjects.push_back(&player);
 
     groundTex = LoadTexture("resources//Environment//ground.png");
@@ -27,7 +27,7 @@ void GameManager::Init()
         snprintf(fileName, 256, "resources//Environment//Cross%d.png", ((i %3) + 1));
         //const char* fileName = "resources//Environment//Cross1.png";
         crosses[i].LoadSprite(fileName);
-        crosses[i].SpawnAtRandomPosition();
+        //crosses[i].SpawnAtRandomPosition();
         gameObjects.push_back(&crosses[i]);
     }
 
@@ -35,7 +35,7 @@ void GameManager::Init()
     for (i = 0; i < gobletsAmount; i++)
     {
         goblets[i].LoadSprite(fileName);
-        goblets[i].SpawnAtRandomPosition();
+        //goblets[i].SpawnAtRandomPosition();
         gameObjects.push_back(&goblets[i]);
     }
 
@@ -43,10 +43,12 @@ void GameManager::Init()
     {
         snprintf(fileName, 256, "resources//Villager%d.png", ((i % 3) + 1));
         villagers[i].LoadSprite(fileName);
-        villagers[i].SpawnAtRandomPosition();
+        //villagers[i].SpawnAtRandomPosition();
         villagers[i].AssignPlayer(&player);
         gameObjects.push_back(&villagers[i]);
     }
+
+    ResetGame();
 }
 
 void GameManager::Tick(float deltaTime)
@@ -84,6 +86,12 @@ void GameManager::Tick(float deltaTime)
 
     health -= deltaTime * healthDecreaseBySecond;
 
+    if (health <= 0)
+    {
+        ResetGame();
+        return;
+    }
+
     //Check if player is colliding a goblet
     int i;
     for (i = 0; i < gobletsAmount; i++)
@@ -97,7 +105,7 @@ void GameManager::Tick(float deltaTime)
         float minDistanceToCollect = 20;
         if (distanceFromPlayer <= minDistanceToCollect)
         {
-            goblets[i].isActive = false;
+            goblets[i].SpawnAtRandomPosition(false, player.GetPosition());
             humanity += humanityIncreasePerGoblet;
 
             if (humanity >= 1)
@@ -115,9 +123,19 @@ void GameManager::Tick(float deltaTime)
 
         if (distanceFromPlayer <= minDistanceToCollect)
         {
-            health += 0.1;
-            humanity -= 0.1;
-            villagers[i].SpawnAtRandomPosition();
+            health += healthIncreasePerFeed;
+            if (health > 1)
+            {
+                health = 1;
+            }
+
+            humanity -= humanityLossPerFeed;
+            if (humanity <= 0)
+            {
+                ResetGame();
+                return;
+            }
+            villagers[i].SpawnAtRandomPosition(false, player.GetPosition());
         }
     }
 
@@ -188,4 +206,29 @@ void GameManager::RenderUI(float scale)
     DrawRectangle(margin, barY * scale, barWidth, barHeight, BLACK);
     DrawRectangle(margin, barY * scale, barWidth * humanity, barHeight, DOTU_GREEN);
     DrawTextEx(font, "Humanity", { (float)textX, barY * scale }, fontSize * scale, 2, WHITE);
+}
+
+void GameManager::ResetGame()
+{
+    player.SetPosition(GAME_RESOLUTION_WIDTH / 2, GAME_RESOLUTION_HEIGHT / 2);
+    Vector2 playerPos = player.GetPosition();
+
+    int i;
+    for (i = 0; i < crossAmount; i++)
+    {
+        crosses[i].SpawnAtRandomPosition(true, playerPos);
+    }
+
+    for (i = 0; i < gobletsAmount; i++)
+    {
+        goblets[i].SpawnAtRandomPosition(false, playerPos);
+    }
+
+    for (i = 0; i < villagersAmount; i++)
+    {
+        villagers[i].SpawnAtRandomPosition(false, playerPos);
+    }
+
+    health = 1;
+    humanity = 0.25;
 }

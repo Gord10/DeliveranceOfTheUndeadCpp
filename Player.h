@@ -9,7 +9,7 @@ using namespace std;
 class Player : public GameObject
 {
 public:
-	float speed = 150;
+	float speed = 175;
 	bool isWalking = false;
 	bool isMovingLeft = false;
 

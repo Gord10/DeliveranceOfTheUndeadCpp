@@ -22,7 +22,7 @@ public:
 	virtual void Translate(float speedX, float speedY);
 	virtual void Tick(float deltaTime);
 	virtual void Unload();
-	void SpawnAtRandomPosition();
+	void SpawnAtRandomPosition(bool isAllowedToSpawnCloseToPlayer, Vector2 playerPos);
 
 	Vector2 GetPosition();
 	Vector2 GetCenterPosition(float scale);

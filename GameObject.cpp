@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Villager.h"
 #include "Definitions.h"
+#include "raymath.h"
 #include <iostream>
 
 using namespace std;
@@ -58,9 +59,21 @@ void GameObject::Tick(float deltaTime)
 
 }
 
-void GameObject::SpawnAtRandomPosition()
+void GameObject::SpawnAtRandomPosition(bool isAllowedToSpawnCloseToPlayer, Vector2 playerPos)
 {
 	float x = GetRandomValue(-GAME_MAX_X / 10, GAME_MAX_X / 10) * 10;
 	float y = GetRandomValue(-GAME_MAX_Y / 10, GAME_MAX_Y / 10) * 10;
+
+	if (!isAllowedToSpawnCloseToPlayer)
+	{
+		Vector2 pos = { x, y };
+		float distanceFromPlayer = Vector2Distance(pos, playerPos);
+		if (distanceFromPlayer < 200)
+		{
+			SpawnAtRandomPosition(isAllowedToSpawnCloseToPlayer, playerPos);
+			return;
+		}
+	}
+
 	SetPosition(x, y);
 }
