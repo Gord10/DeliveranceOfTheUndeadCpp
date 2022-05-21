@@ -49,11 +49,17 @@ int main(void)
     font = LoadFont("resources/font/alagard.png");
     gameManager.Init();
 
-    while (!WindowShouldClose())    // Detect window close button or ESC key
+    bool willQuit = false;
+    while (!willQuit)    // Detect window close button or ESC key
     {
         if (IsKeyPressed(KEY_F1))
         {
             ChangeFullscreen(screenWidth, screenHeight);
+        }
+
+        if (IsGamepadButtonDown(0, 15) || IsKeyPressed(KEY_ESCAPE))
+        {
+            willQuit = true;
         }
 
         BeginDrawing();

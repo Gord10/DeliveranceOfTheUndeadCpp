@@ -55,29 +55,7 @@ void GameManager::Tick(float deltaTime)
 {
     timePassed += deltaTime;
 
-    Vector2 playerVelocity = { 0, 0 };
-    if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
-    {
-        playerVelocity.x = -1;
-    }
-    else if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
-    {
-        playerVelocity.x = 1;
-    }
 
-    if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
-    {
-        playerVelocity.y = -1;
-    }
-    else if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S))
-    {
-        playerVelocity.y = 1;
-    }
-
-    playerVelocity = Vector2Normalize(playerVelocity);
-    playerVelocity = Vector2Scale(playerVelocity, player.speed);
-
-    player.Translate(playerVelocity.x, playerVelocity.y);
 
 	//player.Tick(deltaTime);
     float scale = GetRenderHeight() / GAME_RESOLUTION_HEIGHT;

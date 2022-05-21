@@ -1,5 +1,6 @@
 #pragma once
 #include "Definitions.h"
+#include "raymath.h"
 //#include "GameObject.h"
 //#include "GameManager.h"
 #include <iostream>
@@ -20,6 +21,39 @@ public:
 
 	void Tick(float deltaTime)
 	{
+		Vector2 velocity = { 0, 0 };
+		if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
+		{
+			velocity.x = -1;
+		}
+		else if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D))
+		{
+			velocity.x = 1;
+		}
+
+		if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W))
+		{
+			velocity.y = -1;
+		}
+		else if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S))
+		{
+			velocity.y = 1;
+		}
+
+		if (velocity.x == 0 && velocity.y == 0)
+		{
+			if (IsGamepadAvailable(0))
+			{
+				velocity.x = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X);
+				velocity.y = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y);
+			}
+		}
+
+		velocity = Vector2Normalize(velocity);
+		velocity = Vector2Scale(velocity, speed);
+
+		Translate(velocity.x, velocity.y);
+
 		animationCounter += deltaTime;
 
 		if (animationCounter > 0.125)
