@@ -53,6 +53,8 @@ void GameManager::Init()
 
 void GameManager::Tick(float deltaTime)
 {
+    timePassed += deltaTime;
+
     Vector2 playerVelocity = { 0, 0 };
     if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
     {
@@ -204,7 +206,19 @@ void GameManager::RenderUI(float scale)
 
     barY = 36;
     DrawRectangle(margin, barY * scale, barWidth, barHeight, BLACK);
-    DrawRectangle(margin, barY * scale, barWidth * humanity, barHeight, DOTU_GREEN);
+
+    bool willRenderHumanityBar = true;
+
+    if (humanity < humanityLossPerFeed && (int) (timePassed * 3.0) % 2 == 0)
+    {
+        willRenderHumanityBar = false;
+    }
+
+    if (willRenderHumanityBar)
+    {
+        DrawRectangle(margin, barY * scale, barWidth * humanity, barHeight, DOTU_GREEN);
+    }
+    
     DrawTextEx(font, "Humanity", { (float)textX, barY * scale }, fontSize * scale, 2, WHITE);
 }
 

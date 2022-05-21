@@ -15,9 +15,9 @@ public:
 	float health = 1;
 	float healthDecreaseBySecond = 0.02;
 	float humanity = 0.5;
-	float humanityIncreasePerGoblet = 0.05;
+	float humanityIncreasePerGoblet = 0.075;
 	float healthIncreasePerFeed = 0.25;
-	float humanityLossPerFeed = 0.2;
+	float humanityLossPerFeed = 0.15;
 	float timePassed = 0;
 
 	Font font;
