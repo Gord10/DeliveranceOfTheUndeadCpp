@@ -8,6 +8,7 @@ Texture groundTex;
 float humanityBarFillRatio = 0;
 float healthBarFillRatio = 1;
 Color crossNormalColor = { 89, 86, 82, 255};
+int framesPassed = 0;
 
 float MoveTowards(float startValue, float targetValue, float delta)
 {
@@ -76,12 +77,10 @@ void GameManager::Init()
 void GameManager::Tick(float deltaTime)
 {
     timePassed += deltaTime;
-    
+    framesPassed++;
+
     float scale = GetRenderHeight() / GAME_RESOLUTION_HEIGHT;
-    cameraPos = player.GetPosition();
-    cameraPos.x -= GAME_RESOLUTION_WIDTH / 2;
-    cameraPos.y -= GAME_RESOLUTION_HEIGHT / 2;
-    cameraPos.y -= 50;
+
 
     health -= deltaTime * healthDecreaseBySecond;
 
@@ -174,6 +173,17 @@ void GameManager::Tick(float deltaTime)
     }
 
     player.SetHarmed(isPlayerHarmed);
+
+    cameraPos = player.GetPosition();
+    cameraPos.x -= GAME_RESOLUTION_WIDTH / 2;
+    cameraPos.y -= GAME_RESOLUTION_HEIGHT / 2;
+    cameraPos.y -= 50;
+
+    if (isPlayerHarmed && framesPassed % 15 == 0)
+    {
+        cameraPos.x += GetRandomValue(-20, 20) * 0.1;
+        cameraPos.y += GetRandomValue(-20, 20) * 0.1;
+    }
 
     list<GameObject*>::iterator it;
     for (it = gameObjects.begin(); it != gameObjects.end(); it++)
