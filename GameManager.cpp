@@ -36,6 +36,9 @@ void GameManager::Init()
 {
     font = LoadFont("resources//Font//alagard.png");
 
+    intro.ReadFromFile("resources//Story//Intro.txt");
+    intro.ReadTexture("resources//Story//Intro.png");
+
 	player.LoadSprites();
     gameObjects.push_back(&player);
 
@@ -193,8 +196,23 @@ void GameManager::Tick(float deltaTime)
         player.Tick(deltaTime);
         if(!IsKeyPressed(KEY_F1) && (GetKeyPressed() || GetGamepadButtonPressed() > 0))
         {
-            state = IN_GAME;
+            state = STORY;
+            intro.ShowNextLine();
         }
+    }
+    else if (state == STORY)
+    {
+        if ((GetKeyPressed() || GetGamepadButtonPressed() > 0))
+        {
+            intro.ShowNextLine();
+            if (intro.isCompleted)
+            {
+                state = IN_GAME;
+                ResetGame();
+                cout << "Start game" <<endl;
+            }
+        }
+        
     }
 }
 
@@ -260,6 +278,10 @@ void GameManager::Render()
 
         DrawTextEx(font, fullScreenText, textPos, fontSize * scale, 2 * scale, WHITE);
     }
+    else if (state == STORY)
+    {
+        intro.Render(font, scale);
+    }
 }
 
 
@@ -275,6 +297,8 @@ void GameManager::Unload()
     UnloadTexture(groundTex);
     UnloadFont(font);
     audioManager.Unload();
+
+    intro.Close();
 }
 
 void GameManager::RenderUI(float scale)

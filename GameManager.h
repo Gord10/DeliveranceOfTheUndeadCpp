@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Villager.h"
 #include "AudioManager.h"
+#include "Story.h"
 #include <list>
 using namespace std;
 //#define GAME_RESOLUTION_WIDTH 640
@@ -16,7 +17,8 @@ public:
 	enum State
 	{
 		TITLE = 0,
-		IN_GAME
+		IN_GAME,
+		STORY
 	};
 
 	State state = TITLE;
@@ -43,6 +45,8 @@ public:
 	AudioManager audioManager;
 
 	Vector2 cameraPos;
+
+	Story intro;
 
 	void Init();
 	void Tick(float deltaTime);
