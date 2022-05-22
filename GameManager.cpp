@@ -71,11 +71,11 @@ void GameManager::Init()
 
 void GameManager::Tick(float deltaTime)
 {
+    timePassed += deltaTime;
+    framesPassed++;
+
     if (state == IN_GAME)
     {
-        timePassed += deltaTime;
-        framesPassed++;
-
         float scale = GetRenderHeight() / GAME_RESOLUTION_HEIGHT;
 
 
@@ -239,13 +239,17 @@ void GameManager::Render()
         player.Render(cameraPos);
 
         //Render the "Press any key to play" text
-        const char* pressSpaceText = "Press any key to play";
-        fontSize = 20;
-        textWidth = MeasureTextEx(font, pressSpaceText, fontSize, 2).x;
-        textPos.x = (GAME_RESOLUTION_WIDTH - textWidth) * scale * 0.5;
-        textPos.y = (GAME_RESOLUTION_HEIGHT - 60)* scale;
- 
-        DrawTextEx(font, pressSpaceText, textPos, fontSize * scale, 2 * scale, WHITE);
+
+        if ((int)(timePassed * 2) % 2 == 0)
+        {
+            const char* pressSpaceText = "Press any key to play";
+            fontSize = 20;
+            textWidth = MeasureTextEx(font, pressSpaceText, fontSize, 2).x;
+            textPos.x = (GAME_RESOLUTION_WIDTH - textWidth) * scale * 0.5;
+            textPos.y = (GAME_RESOLUTION_HEIGHT - 65) * scale;
+
+            DrawTextEx(font, pressSpaceText, textPos, fontSize * scale, 2 * scale, WHITE);
+        }
 
         //Render the "F1: Fullscreen" text
         const char* fullScreenText = "F1: Fullscreen";
