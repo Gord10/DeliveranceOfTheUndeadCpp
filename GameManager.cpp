@@ -39,7 +39,7 @@ void GameManager::Init()
 	player.LoadSprites();
     gameObjects.push_back(&player);
 
-    groundTex = LoadTexture("resources//Environment//ground.png");
+    groundTex = LoadTexture("resources//Environment//Ground.png");
 
     char fileName[256];
     int i;

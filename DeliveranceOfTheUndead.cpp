@@ -10,7 +10,7 @@
 using namespace std;
 
 GameManager gameManager;
-Color BACKGROUND_COLOR = {16, 16, 16};
+Color BACKGROUND_COLOR = {32, 32, 32};
 
 void ChangeFullscreen(int screenWidth, int screenHeight)
 {
