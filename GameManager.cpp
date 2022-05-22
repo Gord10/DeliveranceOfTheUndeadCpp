@@ -5,6 +5,8 @@
 Vector2 cameraPos;
 Texture groundTex;
 
+Story* currentStory;
+
 float MoveTowards(float startValue, float targetValue, float delta)
 {
     if (startValue < targetValue)
@@ -36,8 +38,13 @@ void GameManager::Init()
 {
     font = LoadFont("resources//Font//alagard.png");
 
-    intro.ReadFromFile("resources//Story//Intro.txt");
+    intro.Init("resources//Story//Intro.txt");
     intro.ReadTexture("resources//Story//Intro.png");
+
+    goodEnding.Init("resources//Story//GoodEnding.txt");
+    goodEnding.ReadTexture("resources//Story//GoodEnding.png");
+
+    currentStory = &intro;
 
 	player.LoadSprites();
     gameObjects.push_back(&player);
@@ -106,9 +113,14 @@ void GameManager::Tick(float deltaTime)
                 goblets[i].SpawnAtRandomPosition(false, player.GetPosition());
                 humanity += humanityIncreasePerGoblet;
                 audioManager.PlayHumanity();
-                if (humanity >= 1)
+                if (humanity >= 0.98)
                 {
                     humanity = 1;
+                    currentStory = &goodEnding;
+                    state = STORY;
+                    currentStory->ReadFile();
+                    currentStory->ShowNextLine();
+                    return;
                 }
             }
         }
@@ -197,15 +209,17 @@ void GameManager::Tick(float deltaTime)
         if(!IsKeyPressed(KEY_F1) && (GetKeyPressed() || GetGamepadButtonPressed() > 0))
         {
             state = STORY;
-            intro.ShowNextLine();
+            currentStory = &intro;
+            currentStory->ReadFile();
+            currentStory->ShowNextLine();
         }
     }
     else if (state == STORY)
     {
-        if ((GetKeyPressed() || GetGamepadButtonPressed() > 0))
+        if ((GetKeyPressed() || IsGamepadButtonPressed(0, 7) > 0))
         {
-            intro.ShowNextLine();
-            if (intro.isCompleted)
+            currentStory->ShowNextLine();
+            if (currentStory->isCompleted)
             {
                 state = IN_GAME;
                 ResetGame();
@@ -280,7 +294,7 @@ void GameManager::Render()
     }
     else if (state == STORY)
     {
-        intro.Render(font, scale);
+        currentStory->Render(font, scale);
     }
 }
 
@@ -299,6 +313,7 @@ void GameManager::Unload()
     audioManager.Unload();
 
     intro.Close();
+    goodEnding.Close();
 }
 
 void GameManager::RenderUI(float scale)

@@ -16,8 +16,14 @@ public:
 	bool isCompleted = false;
 	string line;
     Texture texture;
+    const char* fileName;
 
-	void ReadFromFile(const char* fileName)
+    void Init(const char* fileName)
+    {
+        this->fileName = fileName;
+    }
+
+	void ReadFile()
 	{
 		stream.open(fileName);
 	}
@@ -25,6 +31,11 @@ public:
     void ReadTexture(const char* fileName)
     {
         texture = LoadTexture(fileName);
+    }
+
+    void Unload()
+    {
+        UnloadTexture(texture);
     }
 
 	void ShowNextLine()
@@ -46,7 +57,6 @@ public:
 	{
 		isCompleted = true;
 		stream.close();
-        UnloadTexture(texture);
 	}
 
 	void Render(Font font, float scale)
