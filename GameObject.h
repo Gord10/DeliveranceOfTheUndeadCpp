@@ -4,7 +4,6 @@
 
 extern Vector2 cameraPos;
 
-
 class GameObject
 {
 protected: 

@@ -32,4 +32,14 @@ public:
 		int index = GetRandomValue(0, feedSoundsAmount - 1);
 		PlaySound(feedSounds[index]);
 	}
+
+	void Unload()
+	{
+		UnloadSound(humanitySound);
+		int i;
+		for (i = 0; i < feedSoundsAmount; i++)
+		{
+			UnloadSound(feedSounds[i]);
+		}
+	}
 };

@@ -5,11 +5,6 @@
 Vector2 cameraPos;
 Texture groundTex;
 
-float humanityBarFillRatio = 0;
-float healthBarFillRatio = 1;
-Color crossNormalColor = { 89, 86, 82, 255};
-int framesPassed = 0;
-
 float MoveTowards(float startValue, float targetValue, float delta)
 {
     if (startValue < targetValue)
@@ -223,6 +218,7 @@ void GameManager::Unload()
 
     UnloadTexture(groundTex);
     UnloadFont(font);
+    audioManager.Unload();
 }
 
 void GameManager::RenderUI(float scale)

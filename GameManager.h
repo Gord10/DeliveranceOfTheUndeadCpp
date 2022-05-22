@@ -43,9 +43,14 @@ public:
 
 	void RenderUI(float scale);
 private:
+
+	float humanityBarFillRatio = 0;
+	float healthBarFillRatio = 1;
+	Color crossNormalColor = { 89, 86, 82, 255 };
+	int framesPassed = 0;
+
 	list<GameObject*> gameObjects;
 	void ResetGame();
-
 };
 
 
