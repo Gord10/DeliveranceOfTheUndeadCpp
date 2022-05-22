@@ -9,6 +9,12 @@ using namespace std;
 //#define GAME_RESOLUTION_WIDTH 640
 //#define GAME_RESOLUTION_HEIGHT 360
 
+extern Vector2 cameraPos;
+extern Texture groundTex;
+
+extern Story* currentStory;
+
+
 class GameManager
 {
 public:
@@ -29,7 +35,7 @@ public:
 	float humanityIncreasePerGoblet = 0.075;
 	float healthIncreasePerFeed = 0.25;
 	float humanityLossPerFeed = 0.15;
-	float crossHarmPerSecond = 0.03;
+	float crossHarmPerSecond = 0.04;
 	float outOfBoundariesHarmPerSecond = 0.1f;
 	float timePassed = 0;
 

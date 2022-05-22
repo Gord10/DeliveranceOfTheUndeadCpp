@@ -1,7 +1,9 @@
+#pragma once
 #include "GameManager.h"
 #include <iostream>
 #include <string>
 #include "raymath.h"
+
 Vector2 cameraPos;
 Texture groundTex;
 
@@ -143,6 +145,8 @@ void GameManager::Tick(float deltaTime)
                 {
                     health = 1;
                 }
+                
+                audioManager.PlayFeedSound();
 
                 humanity -= humanityLossPerFeed;
                 if (humanity <= 0)
@@ -151,7 +155,7 @@ void GameManager::Tick(float deltaTime)
                     state = STORY;
                     currentStory->ReadFile();
                     currentStory->ShowNextLine();
-                    audioManager.PlayFeedSound();
+                    
                     //ResetGame();
                     return;
                 }
@@ -385,5 +389,8 @@ void GameManager::ResetGame()
 
     health = 1;
     humanity = 0.25;
+
+    healthBarFillRatio = health;
+    humanityBarFillRatio = humanity;
 }
 
