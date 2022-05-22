@@ -16,7 +16,7 @@ void GameObject::Render(Vector2 cameraPos)
 	}
 
 	float scale = GetRenderHeight() / GAME_RESOLUTION_HEIGHT;
-	DrawTextureEx(texture, { (x - cameraPos.x - (texture.width / 2)) * scale, (y - cameraPos.y - texture.height) * scale}, 0, scale, WHITE);
+	DrawTextureEx(texture, { (x - cameraPos.x - (texture.width / 2)) * scale, (y - cameraPos.y - texture.height) * scale}, 0, scale, tintColor);
 }
 
 void GameObject::Translate(float xSpeed, float ySpeed)
@@ -76,4 +76,9 @@ void GameObject::SpawnAtRandomPosition(bool isAllowedToSpawnCloseToPlayer, Vecto
 	}
 
 	SetPosition(x, y);
+}
+
+void GameObject::SetTintColor(Color tintColor)
+{
+	this->tintColor = tintColor;
 }

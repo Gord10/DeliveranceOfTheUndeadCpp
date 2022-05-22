@@ -5,6 +5,32 @@
 Vector2 cameraPos;
 Texture groundTex;
 
+float humanityBarFillRatio = 0;
+float healthBarFillRatio = 1;
+Color crossNormalColor = { 89, 86, 82, 255};
+
+float MoveTowards(float startValue, float targetValue, float delta)
+{
+    if (startValue < targetValue)
+    {
+        startValue += delta;
+        if (startValue > targetValue)
+        {
+            startValue = targetValue;
+        }
+    }
+    else if (startValue > targetValue)
+    {
+        startValue -= delta;
+        if (startValue < targetValue)
+        {
+            startValue = targetValue;
+        }
+    }
+
+    return startValue;
+}
+
 GameManager::GameManager()
 {
 
@@ -139,7 +165,11 @@ void GameManager::Tick(float deltaTime)
         {
             health -= crossHarmPerSecond * deltaTime;
             isPlayerHarmed = true;
-            break;
+            crosses[i].SetTintColor(DOTU_RED);
+        }
+        else
+        {
+            crosses[i].SetTintColor(crossNormalColor);
         }
     }
 
@@ -194,9 +224,11 @@ void GameManager::RenderUI(float scale)
     float fontSize = 16;
     float barY = 12;
     float barHeight = 16 * scale;
+
+    healthBarFillRatio = MoveTowards(healthBarFillRatio, health, GetFrameTime());
  
     DrawRectangle(margin, barY *scale, barWidth, barHeight, BLACK);
-    DrawRectangle(margin, barY * scale, barWidth * health, barHeight, DOTU_RED);
+    DrawRectangle(margin, barY * scale, barWidth * healthBarFillRatio, barHeight, DOTU_RED);
 
     int textWidth = MeasureText("Blood", 10);
     int textX = (GetRenderWidth() - textWidth * scale) / 2;
@@ -204,20 +236,21 @@ void GameManager::RenderUI(float scale)
 
     textWidth = MeasureText("Humanity", 10);
     textX = (GetRenderWidth() - textWidth * scale) / 2;
-
     barY = 36;
     DrawRectangle(margin, barY * scale, barWidth, barHeight, BLACK);
 
     bool willRenderHumanityBar = true;
+    humanityBarFillRatio = MoveTowards(humanityBarFillRatio, humanity, GetFrameTime());
 
-    if (humanity < humanityLossPerFeed && (int) (timePassed * 3.0) % 2 == 0)
+    if (humanityBarFillRatio < humanityLossPerFeed && (int) (timePassed * 3.0) % 2 == 0)
     {
         willRenderHumanityBar = false;
     }
 
+
     if (willRenderHumanityBar)
     {
-        DrawRectangle(margin, barY * scale, barWidth * humanity, barHeight, DOTU_GREEN);
+        DrawRectangle(margin, barY * scale, barWidth * humanityBarFillRatio, barHeight, DOTU_GREEN);
     }
     
     DrawTextEx(font, "Humanity", { (float)textX, barY * scale }, fontSize * scale, 2, WHITE);
@@ -247,3 +280,4 @@ void GameManager::ResetGame()
     health = 1;
     humanity = 0.25;
 }
+

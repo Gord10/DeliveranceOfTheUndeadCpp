@@ -10,10 +10,12 @@ class GameObject
 protected: 
 	
 	Texture2D texture;
+	Color tintColor = WHITE;
 	
 public: 
 	bool isActive = true;
 	float x = 0, y = 0;
+	
 
 	void LoadSprites();
 	virtual void LoadSprite(const char * fileName);
@@ -26,4 +28,5 @@ public:
 
 	Vector2 GetPosition();
 	Vector2 GetCenterPosition(float scale);
+	void SetTintColor(Color tintColor);
 };

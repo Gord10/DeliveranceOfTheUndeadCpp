@@ -116,13 +116,14 @@ public:
 			frameRec.width *= -1;
 		}
 
-		Color red = DOTU_RED;
-		Color white = WHITE;
-		DrawTexturePro(texture, frameRec, destRec, { 0, 0 }, 0, (isHarmed) ? red : white);
+		DrawTexturePro(texture, frameRec, destRec, { 0, 0 }, 0, tintColor);
 	}
 
 	void SetHarmed(bool isHarmed)
 	{
 		this->isHarmed = isHarmed;
+		Color red = DOTU_RED;
+		Color white = WHITE;
+		tintColor = (isHarmed) ? red : white;
 	}
 };
