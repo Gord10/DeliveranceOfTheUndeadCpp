@@ -44,6 +44,9 @@ void GameManager::Init()
     goodEnding.Init("resources//Story//GoodEnding.txt");
     goodEnding.ReadTexture("resources//Story//GoodEnding.png");
 
+    badEnding.Init("resources//Story//BadEnding.txt");
+    badEnding.ReadTexture("resources//Story//BadEnding.png");
+
     currentStory = &intro;
 
 	player.LoadSprites();
@@ -144,12 +147,13 @@ void GameManager::Tick(float deltaTime)
                 humanity -= humanityLossPerFeed;
                 if (humanity <= 0)
                 {
-                    ResetGame();
-                    return;
-                }
-                else
-                {
+                    currentStory = &badEnding;
+                    state = STORY;
+                    currentStory->ReadFile();
+                    currentStory->ShowNextLine();
                     audioManager.PlayFeedSound();
+                    //ResetGame();
+                    return;
                 }
 
                 villagers[i].SpawnAtRandomPosition(false, player.GetPosition());
@@ -312,8 +316,9 @@ void GameManager::Unload()
     UnloadFont(font);
     audioManager.Unload();
 
-    intro.Close();
-    goodEnding.Close();
+    intro.Unload();
+    goodEnding.Unload();
+    badEnding.Unload();
 }
 
 void GameManager::RenderUI(float scale)

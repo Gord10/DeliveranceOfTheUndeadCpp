@@ -25,6 +25,12 @@ public:
 
 	void ReadFile()
 	{
+        if (stream.is_open())
+        {
+            stream.close();
+        }
+
+        isCompleted = false;
 		stream.open(fileName);
 	}
 
@@ -36,6 +42,7 @@ public:
     void Unload()
     {
         UnloadTexture(texture);
+        Close();
     }
 
 	void ShowNextLine()

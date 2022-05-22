@@ -46,7 +46,7 @@ public:
 
 	Vector2 cameraPos;
 
-	Story intro, goodEnding;
+	Story intro, goodEnding, badEnding;
 
 	void Init();
 	void Tick(float deltaTime);
