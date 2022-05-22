@@ -13,6 +13,14 @@ class GameManager
 public:
 	GameManager();
 
+	enum State
+	{
+		TITLE = 0,
+		IN_GAME
+	};
+
+	State state = TITLE;
+
 	float health = 1;
 	float healthDecreaseBySecond = 0.02;
 	float humanity = 0.5;
