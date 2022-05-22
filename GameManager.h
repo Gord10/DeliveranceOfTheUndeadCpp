@@ -19,6 +19,8 @@ public:
 	float humanityIncreasePerGoblet = 0.075;
 	float healthIncreasePerFeed = 0.25;
 	float humanityLossPerFeed = 0.15;
+	float crossHarmPerSecond = 0.03;
+	float outOfBoundariesHarmPerSecond = 0.1f;
 	float timePassed = 0;
 
 	Font font;

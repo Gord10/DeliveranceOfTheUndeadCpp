@@ -32,5 +32,4 @@ public:
 		int index = GetRandomValue(0, feedSoundsAmount - 1);
 		PlaySound(feedSounds[index]);
 	}
-
 };

@@ -24,9 +24,7 @@ void GameManager::Init()
     for (i = 0; i < crossAmount; i++)
     {
         snprintf(fileName, 256, "resources//Environment//Cross%d.png", ((i %3) + 1));
-        //const char* fileName = "resources//Environment//Cross1.png";
         crosses[i].LoadSprite(fileName);
-        //crosses[i].SpawnAtRandomPosition();
         gameObjects.push_back(&crosses[i]);
     }
 
@@ -34,7 +32,6 @@ void GameManager::Init()
     for (i = 0; i < gobletsAmount; i++)
     {
         goblets[i].LoadSprite(fileName);
-        //goblets[i].SpawnAtRandomPosition();
         gameObjects.push_back(&goblets[i]);
     }
 
@@ -42,7 +39,6 @@ void GameManager::Init()
     {
         snprintf(fileName, 256, "resources//Villager%d.png", ((i % 3) + 1));
         villagers[i].LoadSprite(fileName);
-        //villagers[i].SpawnAtRandomPosition();
         villagers[i].AssignPlayer(&player);
         gameObjects.push_back(&villagers[i]);
     }
@@ -92,6 +88,7 @@ void GameManager::Tick(float deltaTime)
         }
     }
 
+    //Check if player is colliding a villager
     for (i = 0; i < villagersAmount; i++)
     {
         Vector2 villagerPos = villagers[i].GetPosition();
@@ -100,6 +97,7 @@ void GameManager::Tick(float deltaTime)
 
         if (distanceFromPlayer <= minDistanceToCollect)
         {
+            cout << "Feed\n";
             health += healthIncreasePerFeed;
             if (health > 1)
             {
@@ -119,18 +117,33 @@ void GameManager::Tick(float deltaTime)
 
             villagers[i].SpawnAtRandomPosition(false, player.GetPosition());
         }
-
-        if (player.x < -GAME_MAX_X || player.x > GAME_MAX_X || player.y < -GAME_MAX_Y || player.y > GAME_MAX_Y)
-        {
-            health -= 0.1 * deltaTime;
-            player.SetHarmed(true);
-        }
-        else
-        {
-            player.SetHarmed(false);
-        }
-
     }
+
+    bool isPlayerHarmed = false;
+
+    //Check if player is violating the graveyard boundaries
+    if (player.x < -GAME_MAX_X || player.x > GAME_MAX_X || player.y < -GAME_MAX_Y || player.y > GAME_MAX_Y)
+    {
+        health -= outOfBoundariesHarmPerSecond * deltaTime;
+        isPlayerHarmed = true;
+    }
+
+    //Check if player is close to a cross
+    for (i = 0; i < crossAmount; i++)
+    {
+        Vector2 crossPos = crosses[i].GetPosition();
+        float distanceFromPlayer = Vector2Distance(crossPos, player.GetPosition());
+        float minDistanceToGetHarmed = 60;
+
+        if (distanceFromPlayer < minDistanceToGetHarmed)
+        {
+            health -= crossHarmPerSecond * deltaTime;
+            isPlayerHarmed = true;
+            break;
+        }
+    }
+
+    player.SetHarmed(isPlayerHarmed);
 
     list<GameObject*>::iterator it;
     for (it = gameObjects.begin(); it != gameObjects.end(); it++)
@@ -218,7 +231,7 @@ void GameManager::ResetGame()
     int i;
     for (i = 0; i < crossAmount; i++)
     {
-        crosses[i].SpawnAtRandomPosition(true, playerPos);
+        crosses[i].SpawnAtRandomPosition(false, playerPos);
     }
 
     for (i = 0; i < gobletsAmount; i++)
