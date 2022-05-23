@@ -6,14 +6,6 @@
 #include "Story.h"
 #include <list>
 using namespace std;
-//#define GAME_RESOLUTION_WIDTH 640
-//#define GAME_RESOLUTION_HEIGHT 360
-
-extern Vector2 cameraPos;
-extern Texture groundTex;
-
-extern Story* currentStory;
-
 
 class GameManager
 {
@@ -50,8 +42,6 @@ public:
 	Villager villagers[villagersAmount];
 	AudioManager audioManager;
 
-	Vector2 cameraPos;
-
 	Story intro, goodEnding, badEnding;
 
 	void Init();
@@ -66,6 +56,11 @@ private:
 	float healthBarFillRatio = 1;
 	Color crossNormalColor = { 89, 86, 82, 255 };
 	int framesPassed = 0;
+
+	Vector2 cameraPos;
+	Texture groundTex;
+
+	Story* currentStory;
 
 	list<GameObject*> gameObjects;
 	void ResetGame();

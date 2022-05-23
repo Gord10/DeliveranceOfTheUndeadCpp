@@ -1,5 +1,4 @@
 #include "raylib.h"
-#include <format>
 #include <iostream>
 #include <string>
 #include <string_view>
@@ -35,10 +34,11 @@ int main(void)
     
     // Initialization
     //--------------------------------------------------------------------------------------
-    const int screenWidth = GAME_RESOLUTION_WIDTH;
-    const int screenHeight = GAME_RESOLUTION_HEIGHT;
+    const int screenWidth = 1280;
+    const int screenHeight = 720;
 
     SetConfigFlags(FLAG_VSYNC_HINT);
+    //SetTargetFPS(60);
     InitWindow(screenWidth, screenHeight, "Deliverance of the Undead");
     gameManager.Init();
 

@@ -51,6 +51,10 @@ public:
 		{
 			if (getline(stream, line))
 			{
+				if (!line.empty() && line[line.size() - 1] == '\r')
+    					line.erase(line.size() - 1);
+
+                //line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
 				cout << line << endl;
 			}
 			else

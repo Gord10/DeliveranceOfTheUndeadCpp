@@ -4,10 +4,7 @@
 #include <string>
 #include "raymath.h"
 
-Vector2 cameraPos;
-Texture groundTex;
 
-Story* currentStory;
 
 float MoveTowards(float startValue, float targetValue, float delta)
 {
@@ -38,7 +35,7 @@ GameManager::GameManager()
 
 void GameManager::Init()
 {
-    font = LoadFont("resources//Font//alagard.png");
+    font = LoadFont("resources//font//alagard.png");
 
     intro.Init("resources//Story//Intro.txt");
     intro.ReadTexture("resources//Story//Intro.png");
@@ -54,7 +51,7 @@ void GameManager::Init()
 	player.LoadSprites();
     gameObjects.push_back(&player);
 
-    groundTex = LoadTexture("resources//Environment//Ground.png");
+    groundTex = LoadTexture("resources//Environment//ground.png");
 
     char fileName[256];
     int i;

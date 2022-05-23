@@ -11,7 +11,7 @@ public:
 	void Init()
 	{
 		InitAudioDevice();
-		humanitySound = LoadSound("resources//Audio//Humanity.wav");
+		humanitySound = LoadSound("resources//Audio//humanity.wav");
 		
 		int i;
 		for (i = 0; i < feedSoundsAmount; i++)
