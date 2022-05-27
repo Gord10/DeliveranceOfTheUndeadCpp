@@ -16,10 +16,11 @@ void GameObject::Render(Vector2 cameraPos)
 	}
 
 	float scale = GetRenderHeight() / GAME_RESOLUTION_HEIGHT;
+	//Render the object considering the resolution and camera position
 	DrawTextureEx(texture, { (x - cameraPos.x - (texture.width / 2)) * scale, (y - cameraPos.y - texture.height) * scale}, 0, scale, tintColor);
 }
 
-void GameObject::Translate(float xSpeed, float ySpeed)
+void GameObject::Translate(float xSpeed, float ySpeed) //Move the object by this speed
 {
 	this->x += xSpeed *GetFrameTime();
 	this->y += ySpeed *GetFrameTime();
@@ -61,14 +62,15 @@ void GameObject::Tick(float deltaTime)
 
 void GameObject::SpawnAtRandomPosition(bool isAllowedToSpawnCloseToPlayer, Vector2 playerPos)
 {
-	float x = GetRandomValue(-GAME_MAX_X / 10, GAME_MAX_X / 10) * 10;
-	float y = GetRandomValue(-GAME_MAX_Y / 10, GAME_MAX_Y / 10) * 10;
+	float x = GetRandomValue(-GAME_MAX_X, GAME_MAX_X);
+	float y = GetRandomValue(-GAME_MAX_Y, GAME_MAX_Y);
 
 	if (!isAllowedToSpawnCloseToPlayer)
 	{
 		Vector2 pos = { x, y };
 		float distanceFromPlayer = Vector2Distance(pos, playerPos);
-		if (distanceFromPlayer < 200)
+		float minDistanceFromPlayer = 200;
+		if (distanceFromPlayer < minDistanceFromPlayer) //Get another random position if the position is too close to player
 		{
 			SpawnAtRandomPosition(isAllowedToSpawnCloseToPlayer, playerPos);
 			return;

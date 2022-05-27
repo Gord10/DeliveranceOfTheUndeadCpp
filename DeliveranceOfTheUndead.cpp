@@ -50,15 +50,15 @@ int main(void)
             ChangeFullscreen(screenWidth, screenHeight);
         }
 
-        if (IsGamepadButtonDown(0, 15) || IsKeyPressed(KEY_ESCAPE))
+        if (IsGamepadButtonDown(0, 15) || IsKeyPressed(KEY_ESCAPE)) //Close the game if keyboard escape button or gamepad start button is pressed
         {
             willQuit = true;
         }
 
         BeginDrawing();
         ClearBackground(BACKGROUND_COLOR);
-        gameManager.Tick(GetFrameTime());
-        gameManager.Render();
+        gameManager.Tick(GetFrameTime()); //Update the game
+        gameManager.Render(); //Render the game
 
         EndDrawing();
     }

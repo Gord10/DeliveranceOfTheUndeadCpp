@@ -19,9 +19,11 @@ public:
 	int spriteIndex = 0;
 	Texture2D idleSpriteSheet;
 	Texture2D walkingSpriteSheet;
+	int framesAmount = 3; //How many frames are there in the sprite sheet
 
 	void Tick(float deltaTime)
 	{
+		//Read the input from keyboard
 		Vector2 velocity = { 0, 0 };
 		if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A))
 		{
@@ -41,10 +43,12 @@ public:
 			velocity.y = 1;
 		}
 
+		//If we haven't read movement key from keyboard, try reading from the gamepad
 		if (velocity.x == 0 && velocity.y == 0)
 		{
 			if (IsGamepadAvailable(0))
 			{
+				//Read input from gamepad
 				velocity.x = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_X);
 				velocity.y = GetGamepadAxisMovement(0, GAMEPAD_AXIS_LEFT_Y);
 			}
@@ -52,17 +56,16 @@ public:
 
 		velocity = Vector2Normalize(velocity);
 		velocity = Vector2Scale(velocity, speed);
+		Translate(velocity.x, velocity.y); //Move the vampire
 
-		Translate(velocity.x, velocity.y);
-
+		//Set the sprite index according to the time and how many frames are there in the sprite sheet
 		animationCounter += deltaTime;
-
-		if (animationCounter > 0.125)
+		float animationTime = 0.125;
+		if (animationCounter >= animationTime)
 		{
 			spriteIndex++;
-			spriteIndex %= 3;
+			spriteIndex %= framesAmount;
 			animationCounter = 0;
-			//texture = (isWalking) ? runningSpritesRight[spriteIndex] : idleSpritesRight[spriteIndex];
 		}
 	}
 
@@ -82,8 +85,9 @@ public:
 	void Translate(float speedX, float speedY)
 	{
 		GameObject::Translate(speedX, speedY);
-		isWalking = speedX != 0 || speedY != 0;
+		isWalking = speedX != 0 || speedY != 0; //Vampire will play walking animation if speedX and speedY are not Z (i.e., the vampire is moving)
 
+		//We will flip the sprite later according to speedX's direction
 		if (speedX < 0)
 		{
 			isMovingLeft = true;
@@ -97,15 +101,18 @@ public:
 	void Render(Vector2 cameraPos)
 	{
 		float scale = GetRenderHeight() / GAME_RESOLUTION_HEIGHT;
-		texture = (isWalking) ? walkingSpriteSheet : idleSpriteSheet;
+		texture = (isWalking) ? walkingSpriteSheet : idleSpriteSheet; //Which sprite sheet will be used?
 
-		Rectangle frameRec = { 0.0f, 0.0f, (float)idleSpriteSheet.width / 3.0, (float)idleSpriteSheet.height };
-		frameRec.x = (float)spriteIndex * ((float)idleSpriteSheet.width / 3.0);
+		Rectangle frameRec = { 0.0f, 0.0f, (float)idleSpriteSheet.width / (float) framesAmount, (float)idleSpriteSheet.height };
+		frameRec.x = (float)spriteIndex * ((float)idleSpriteSheet.width / (float)framesAmount);
 
-		Rectangle destRec = { x - cameraPos.x, y - cameraPos.y, texture.width / 3.0, texture.height };
+		Rectangle destRec = { x - cameraPos.x, y - cameraPos.y, texture.width / (float)framesAmount, texture.height};
+
+		//Vampire's feet will be at X and Y positions
 		destRec.x -= frameRec.width / 2;
 		destRec.y -= texture.height;
 
+		//Make sure the destination rectangle is scaled, so it will look correct when the screen resolution is different
 		destRec.x *= scale;
 		destRec.y *= scale;
 		destRec.width *= scale;
@@ -113,13 +120,13 @@ public:
 				
 		if (isMovingLeft)
 		{
-			frameRec.width *= -1;
+			frameRec.width *= -1; //Flip the frame
 		}
 
 		DrawTexturePro(texture, frameRec, destRec, { 0, 0 }, 0, tintColor);
 	}
 
-	void SetHarmed(bool isHarmed)
+	void SetHarmed(bool isHarmed) //Tilt color will be red if the vampire is hurt
 	{
 		this->isHarmed = isHarmed;
 		Color red = DOTU_RED;

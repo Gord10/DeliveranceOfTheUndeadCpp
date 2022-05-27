@@ -9,23 +9,26 @@ using namespace std;
 static void DrawTextBoxed(Font font, const char* text, Rectangle rec, float fontSize, float spacing, bool wordWrap, Color tint);   // Draw text using font inside rectangle limits
 static void DrawTextBoxedSelectable(Font font, const char* text, Rectangle rec, float fontSize, float spacing, bool wordWrap, Color tint, int selectStart, int selectLength, Color selectTint, Color selectBackTint);    // Draw text using font inside rectangle limits with support for text selection
 
+//This function reads a txt file as text and png file as background image, then shows them to player 
 class Story
 {
 public:
 	ifstream stream;
 	bool isCompleted = false;
 	string line;
-    Texture texture;
+    Texture texture; //Background image
     const char* fileName;
 
+    //Store the .txt file's name, which will be used for reading the story
     void Init(const char* fileName)
     {
-        this->fileName = fileName;
+        this->fileName = fileName; 
     }
 
 	void ReadFile()
 	{
-        if (stream.is_open())
+        //We will re-read the story file if the stream is already open
+        if (stream.is_open()) 
         {
             stream.close();
         }
@@ -49,12 +52,13 @@ public:
 	{
 		if (stream.is_open())
 		{
-			if (getline(stream, line))
+			if (getline(stream, line)) //Read the "line" from the stream
 			{
-				if (!line.empty() && line[line.size() - 1] == '\r')
-    					line.erase(line.size() - 1);
+                if (!line.empty() && line[line.size() - 1] == '\r') //Remove \r characters. This is required for Linux
+                {
+                    line.erase(line.size() - 1);
+                }
 
-                //line.erase(std::remove(line.begin(), line.end(), '\r'), line.end());
 				cout << line << endl;
 			}
 			else
@@ -72,21 +76,23 @@ public:
 
 	void Render(Font font, float scale)
 	{
-        DrawTextureEx(texture, { 0, 0 }, 0, scale, WHITE);
+        DrawTextureEx(texture, { 0, 0 }, 0, scale, WHITE); //Draw the background
 
+        //Draw the text
 		float fontSize = 16;
 		float textWidth = MeasureTextEx(font, line.c_str(), fontSize, 2).x;
         Rectangle rect;
-        rect.x = 25;
-        rect.y = (GAME_RESOLUTION_HEIGHT - 50) * scale;
-        rect.width = (GAME_RESOLUTION_WIDTH - 50) * scale;
+        float xMargin = 25;
+        float yMargin = 50;
+
+        rect.x = xMargin;
+        rect.y = (GAME_RESOLUTION_HEIGHT - yMargin) * scale;
+        rect.width = (GAME_RESOLUTION_WIDTH - (xMargin)) * scale;
         rect.height = 50 * scale;
 
-		//DrawTextEx(font, line.c_str(), textPos, fontSize * scale, 2 * scale, WHITE);
-        DrawRectangleRec(rect, { 0, 0, 0, 200 });
+        DrawRectangleRec(rect, { 0, 0, 0, 200 }); //Draw a black box behind the text
         DrawTextBoxed(font, line.c_str(), rect, fontSize * scale, 2 * scale, true, WHITE);
 	}
-
 };
 
 static void DrawTextBoxed(Font font, const char* text, Rectangle rec, float fontSize, float spacing, bool wordWrap, Color tint)

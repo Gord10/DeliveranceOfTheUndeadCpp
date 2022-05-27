@@ -4,8 +4,7 @@
 #include <string>
 #include "raymath.h"
 
-
-
+//Move startValue to target value, using the delta
 float MoveTowards(float startValue, float targetValue, float delta)
 {
     if (startValue < targetValue)
@@ -35,6 +34,7 @@ GameManager::GameManager()
 
 void GameManager::Init()
 {
+    //Load files
     font = LoadFont("resources//font//alagard.png");
 
     intro.Init("resources//Story//Intro.txt");
@@ -89,13 +89,11 @@ void GameManager::Tick(float deltaTime)
     if (state == IN_GAME)
     {
         float scale = GetRenderHeight() / GAME_RESOLUTION_HEIGHT;
-
-
-        health -= deltaTime * healthDecreaseBySecond;
+        health -= deltaTime * healthDecreaseBySecond; //Decrease the health. Vampire is losing blood continuously
 
         if (health <= 0)
         {
-            ResetGame();
+            ResetGame(); //Game over
             return;
         }
 
@@ -115,7 +113,8 @@ void GameManager::Tick(float deltaTime)
                 goblets[i].SpawnAtRandomPosition(false, player.GetPosition());
                 humanity += humanityIncreasePerGoblet;
                 audioManager.PlayHumanity();
-                if (humanity >= 0.98)
+
+                if (humanity >= 0.98) //Player became a mortal
                 {
                     humanity = 1;
                     currentStory = &goodEnding;
@@ -134,7 +133,7 @@ void GameManager::Tick(float deltaTime)
             float distanceFromPlayer = Vector2Distance(villagerPos, player.GetPosition());
             float minDistanceToCollect = 40;
 
-            if (distanceFromPlayer <= minDistanceToCollect)
+            if (distanceFromPlayer <= minDistanceToCollect) //Player is feeding from the villager
             {
                 cout << "Feed\n";
                 health += healthIncreasePerFeed;
@@ -146,18 +145,16 @@ void GameManager::Tick(float deltaTime)
                 audioManager.PlayFeedSound();
 
                 humanity -= humanityLossPerFeed;
-                if (humanity <= 0)
+                if (humanity <= 0) //Game over. Show bad ending
                 {
                     currentStory = &badEnding;
                     state = STORY;
                     currentStory->ReadFile();
                     currentStory->ShowNextLine();
-                    
-                    //ResetGame();
                     return;
                 }
 
-                villagers[i].SpawnAtRandomPosition(false, player.GetPosition());
+                villagers[i].SpawnAtRandomPosition(false, player.GetPosition()); //Spawn the object in a random position distant from the player
             }
         }
 
@@ -177,7 +174,7 @@ void GameManager::Tick(float deltaTime)
             float distanceFromPlayer = Vector2Distance(crossPos, player.GetPosition());
             float minDistanceToGetHarmed = 60;
 
-            if (distanceFromPlayer < minDistanceToGetHarmed)
+            if (distanceFromPlayer < minDistanceToGetHarmed) //Cross will harm the player
             {
                 health -= crossHarmPerSecond * deltaTime;
                 isPlayerHarmed = true;
@@ -191,17 +188,19 @@ void GameManager::Tick(float deltaTime)
 
         player.SetHarmed(isPlayerHarmed);
 
+        //Set the camera position
         cameraPos = player.GetPosition();
         cameraPos.x -= GAME_RESOLUTION_WIDTH / 2;
         cameraPos.y -= GAME_RESOLUTION_HEIGHT / 2;
         cameraPos.y -= 50;
 
-        if (isPlayerHarmed && framesPassed % 15 == 0)
+        if (isPlayerHarmed && framesPassed % 15 == 0) //Screen shake
         {
             cameraPos.x += GetRandomValue(-20, 20) * 0.1;
             cameraPos.y += GetRandomValue(-20, 20) * 0.1;
         }
 
+        //Tick each objects in list
         list<GameObject*>::iterator it;
         for (it = gameObjects.begin(); it != gameObjects.end(); it++)
         {
@@ -211,7 +210,7 @@ void GameManager::Tick(float deltaTime)
     else if (state == TITLE)
     {
         player.Tick(deltaTime);
-        if(!IsKeyPressed(KEY_F1) && (GetKeyPressed() || GetGamepadButtonPressed() > 0))
+        if(!IsKeyPressed(KEY_F1) && (GetKeyPressed() || GetGamepadButtonPressed() > 0)) //Show the intro if any key is pressed but F1 (which is fullscreen key)
         {
             state = STORY;
             currentStory = &intro;
@@ -221,13 +220,13 @@ void GameManager::Tick(float deltaTime)
     }
     else if (state == STORY)
     {
-        if ((GetKeyPressed() || IsGamepadButtonPressed(0, 7) > 0))
+        if ((GetKeyPressed() || IsGamepadButtonPressed(0, 7) > 0)) //7 is the south button of the right side of the gamepad. A button for Xbox gamepad.
         {
             currentStory->ShowNextLine();
             if (currentStory->isCompleted)
             {
                 state = IN_GAME;
-                ResetGame();
+                ResetGame(); //Start the game
                 cout << "Start game" <<endl;
             }
         }
@@ -241,15 +240,19 @@ void GameManager::Render()
     
     if (state == IN_GAME)
     {
+        //Draw ground
         DrawTextureTiled(groundTex, { 0, 0, (float)groundTex.width, (float)groundTex.height }, { (-2048 - cameraPos.x) * scale, (-2048 - cameraPos.y) * scale, 4096 * scale, 4096 * scale }, { 0, 0 }, 0, scale, WHITE);
 
+        //Draw game limits. They will be red
         DrawLineEx({ (-GAME_MAX_X - cameraPos.x) * scale, (-GAME_MAX_Y - cameraPos.y) * scale }, { (GAME_MAX_X - cameraPos.x) * scale, (-GAME_MAX_Y - cameraPos.y) * scale }, scale, DOTU_RED);
         DrawLineEx({ (-GAME_MAX_X - cameraPos.x) * scale, (GAME_MAX_Y - cameraPos.y) * scale }, { (GAME_MAX_X - cameraPos.x) * scale, (GAME_MAX_Y - cameraPos.y) * scale }, scale, DOTU_RED);
         DrawLineEx({ (-GAME_MAX_X - cameraPos.x) * scale, (-GAME_MAX_Y - cameraPos.y) * scale }, { (-GAME_MAX_X - cameraPos.x) * scale, (GAME_MAX_Y - cameraPos.y) * scale }, scale, DOTU_RED);
         DrawLineEx({ (GAME_MAX_X - cameraPos.x) * scale, (-GAME_MAX_Y - cameraPos.y) * scale }, { (GAME_MAX_X - cameraPos.x) * scale, (GAME_MAX_Y - cameraPos.y) * scale }, scale, DOTU_RED);
 
+        //Sort the game objects according to their Y positions, so we will render them in correct order later
         gameObjects.sort([](const GameObject* A, const GameObject* B) {return A->y < B->y; });
 
+        //Render each objects
         list<GameObject*>::iterator it;
         for (it = gameObjects.begin(); it != gameObjects.end(); it++)
         {
@@ -275,8 +278,7 @@ void GameManager::Render()
 
         player.Render(cameraPos);
 
-        //Render the "Press any key to play" text
-
+        //Render the "Press any key to play" text with blink effect
         if ((int)(timePassed * 2) % 2 == 0)
         {
             const char* pressSpaceText = "Press any key to play";
@@ -302,8 +304,6 @@ void GameManager::Render()
         currentStory->Render(font, scale);
     }
 }
-
-
 
 void GameManager::Unload()
 {
@@ -332,34 +332,38 @@ void GameManager::RenderUI(float scale)
     float barY = 12;
     float barHeight = 16 * scale;
 
-    healthBarFillRatio = MoveTowards(healthBarFillRatio, health, GetFrameTime());
+    healthBarFillRatio = MoveTowards(healthBarFillRatio, health, GetFrameTime()); //We will show the blood level in UI gradually, not instantly
  
+    //Draw blood (health) bar
     DrawRectangle(margin, barY *scale, barWidth, barHeight, BLACK);
     DrawRectangle(margin, barY * scale, barWidth * healthBarFillRatio, barHeight, DOTU_RED);
 
+    //Draw "Blood" text on blood bar
     int textWidth = MeasureText("Blood", 10);
     int textX = (GetRenderWidth() - textWidth * scale) / 2;
     DrawTextEx(font, "Blood", {(float) textX, barY * scale}, fontSize * scale, 2, WHITE);
 
+    //Draw humanity bar
     textWidth = MeasureText("Humanity", 10);
     textX = (GetRenderWidth() - textWidth * scale) / 2;
     barY = 36;
     DrawRectangle(margin, barY * scale, barWidth, barHeight, BLACK);
 
     bool willRenderHumanityBar = true;
-    humanityBarFillRatio = MoveTowards(humanityBarFillRatio, humanity, GetFrameTime());
+    humanityBarFillRatio = MoveTowards(humanityBarFillRatio, humanity, GetFrameTime()); //We will show the humanity level in UI gradually, not instantly
 
-    if (humanityBarFillRatio < humanityLossPerFeed && (int) (timePassed * 3.0) % 2 == 0)
+    if (humanityBarFillRatio < humanityLossPerFeed && (int) (timePassed * 3.0) % 2 == 0) //If the player is at the limit of losing their all humanity, we will blink the humanity bar
     {
         willRenderHumanityBar = false;
     }
 
-
     if (willRenderHumanityBar)
     {
+        //Draw the foreground of humanity bar
         DrawRectangle(margin, barY * scale, barWidth * humanityBarFillRatio, barHeight, DOTU_GREEN);
     }
     
+    //Draw the "Humanity" text
     DrawTextEx(font, "Humanity", { (float)textX, barY * scale }, fontSize * scale, 2, WHITE);
 }
 
@@ -384,6 +388,7 @@ void GameManager::ResetGame()
         villagers[i].SpawnAtRandomPosition(false, playerPos);
     }
 
+    //Default values of health and humanity
     health = 1;
     humanity = 0.25;
 
